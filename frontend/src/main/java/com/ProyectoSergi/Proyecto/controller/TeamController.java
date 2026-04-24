@@ -62,31 +62,5 @@ public class TeamController {
     }
 
 
-    @GetMapping("/new")
-    public String showForm(Model model) {
-        model.addAttribute("team", new Team());
-        model.addAttribute("games", gameService.findAll());
-        model.addAttribute("leagues", leagueService.findAll());
-        return "forms/formTeams";
-    }
 
-    @PostMapping("/save")
-    public String saveTeam(@ModelAttribute Team team) {
-        teamService.save(team);
-        return "redirect:/teams";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deleteTeam(@PathVariable Long id) {
-        teamService.deleteById(id);
-        return "redirect:/teams";
-    }
-
-    @GetMapping("/update/{id}")
-    public String updateTeam(@PathVariable Long id, Model model) {
-        teamService.findById(id).ifPresent(team -> {
-            model.addAttribute("team", team);
-        });
-        return "forms/formTeams";
-    }
 }

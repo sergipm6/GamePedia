@@ -21,8 +21,8 @@ public class  Player {
     private String playerEmail;
 
     @ManyToOne
-    @JoinColumn(name = "rol_id")
-    private Rol rol;
+    @JoinColumn(name = "position_id")
+    private Position position;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -30,13 +30,13 @@ public class  Player {
 
     public Player() {}
 
-    public Player(int playerId, String username, String playerName, String playerEmail, Rol rol,  Team team) {
+    public Player(int playerId, String username, String playerName, String playerEmail, Position position, Team team) {
         this.playerId = playerId;
         this.username = username;
         this.playerName = playerName;
         this.playerEmail = playerEmail;
         this.team = team;
-        this.rol = rol;
+        this.position = position;
     }
     public int getPlayerId() {
         return playerId;
@@ -62,9 +62,9 @@ public class  Player {
     public void setPlayerEmail(String playerEmail) {
         this.playerEmail = playerEmail;
     }
-    public Rol getRol() {return rol;}
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public Position getPosition() {return position;}
+    public void setPosition(Position position) {
+        this.position = position;
     }
     public Team getTeam() {
         return team;

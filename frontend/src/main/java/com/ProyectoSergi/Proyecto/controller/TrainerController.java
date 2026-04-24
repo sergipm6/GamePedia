@@ -25,27 +25,6 @@ public class TrainerController {
         return "trainers";
     }
 
-    //Create
-    @PostMapping("/newTrainer")
-    public String newTrainer(@ModelAttribute Trainer trainer){
-        trainerService.save(trainer);
-        return "redirect:/trainers";
-    }
 
-    //Delete
-    @GetMapping("/deleteTrainer/{id}")
-    public String deleteTrainer(@PathVariable Long id){
-        trainerService.delete(id);
-        return "redirect:/trainers";
-    }
-
-    //Update
-    @GetMapping("/updateTrainer/{id}")
-    public String updateTrainer(Model model, @PathVariable Long id){
-        trainerService.findTrainerById(id).ifPresent(trainer ->{
-            model.addAttribute("trainer", trainer);
-        });
-        return "redirect:/trainers";
-    }
 
 }

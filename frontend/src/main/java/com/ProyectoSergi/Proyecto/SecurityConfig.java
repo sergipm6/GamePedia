@@ -14,9 +14,23 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // <--- ESTO permite que Postman funcione
                 .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/cards/**", "/lists/**", "/index", "/templateFragments/**",
+//                                "/static/**", "/login").permitAll()
+//                        .requestMatchers("/forms/**").hasAnyRole("ADMIN")
                         .anyRequest().permitAll() // <--- ESTO permite entrar sin contraseña mientras desarrollas
                 )
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .defaultSuccessUrl("/private", true)
+//                        .permitAll())
+//
+//                .rememberMe(remember -> remember
+//                        .tokenValiditySeconds(2419200))
+//                .logout(logout -> logout
+//                        .logoutUrl("/logout")
+//                        .logoutSuccessUrl("/"))
                 .httpBasic(Customizer.withDefaults());
+
 
         return http.build();
     }

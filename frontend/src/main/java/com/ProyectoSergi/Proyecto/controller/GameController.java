@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/games")
 public class GameController {
@@ -24,28 +26,15 @@ public class GameController {
         model.addAttribute("games", gameService.findAll());
         return "/lists/listGames";
     }
-
-
-    //Post
-    @PostMapping("/newGame")
-    public String newGame(@ModelAttribute Game game){
-        gameService.save(game);
-        return  "redirect:/games";
+    @GetMapping("/{id}")
+    public String team(@PathVariable Integer id, Model model){
+        Optional<Game> game = gameService.findById(id);
+        if(game.isPresent()){
+            model.addAttribute("game", game.get());
+            return "cards/cardGame";
+        }
+        return  "/lists/listGames";
     }
 
-    //Delete
-    @GetMapping("/delete/{id}")
-    public String deleteGame(@PathVariable Long id){
-        gameService.deleteById(id);
-        return "redirect:/games";
-    }
 
-    //Update
-    @PutMapping("/edit/{id}")
-    public String updateGame(Model model, @PathVariable Long id){
-        gameService.findById(id).ifPresent(game->{
-            model.addAttribute("game", game);
-        });
-        return "redirect: forms/formGames";
-    }
 }

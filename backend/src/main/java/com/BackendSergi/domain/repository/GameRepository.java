@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface GameRepository extends JpaRepository<Game, Integer> {
 
     List<Game> findByGameNameIgnoreCase(String gameName);
     Boolean existsByGameNameIgnoreCase(String gameName);
+
 }

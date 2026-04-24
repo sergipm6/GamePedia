@@ -38,34 +38,5 @@ public class LeagueController {
         return "lists/listCompetition";
     }
 
-    @GetMapping("/new")
-    public String showForm(Model model) {
-        model.addAttribute("league", new League());
-        model.addAttribute("games", gameService.findAll());
-        return "forms/formCompetition";
-    }
 
-    @PostMapping("/save")
-    public String saveLeague(@ModelAttribute League league) {
-        leagueService.createLeague(league);
-        return "redirect:/";
-    }
-
-    @GetMapping("/update/{id}")
-    public String updateLeague(Model model, @PathVariable Integer id) {
-        Optional<League> leagues = leagueService.findById(id);
-        if (leagues.isPresent()) {
-            model.addAttribute("league", leagues.get());
-            model.addAttribute("games", gameService.findAll());
-            return "forms/formCompetition";
-        }else{
-        return "redirect:lists/listCompetition";
-    }
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deleteLeague(@PathVariable Integer id) {
-        leagueService.delete(id);
-        return "redirect:lists/listCompetition";
-    }
 }

@@ -2,105 +2,70 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Equipos por Juego | eSports Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Equipos | GamePedia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" th:href="@{/style.css}">
-    <style>
-        /* Añadido para mejorar la experiencia de usuario al hacer la card clicable */
-        .team-card-hover {
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-        .team-card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
-<body class="bg-light">
+<body>
 
 <div th:replace="~{templateFragments/navBar :: menuComun}"></div>
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <h2 class="fw-bold"><i class="bi bi-grid-3x3-gap-fill me-2 text-primary"></i> Categorías</h2>
-        <a th:href="@{/teams/new}" class="btn btn-primary shadow-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Añadir Nuevo Equipo
-        </a>
-    </div>
+<div class="container mt-5 mb-5">
 
-    <div th:if="${#maps.isEmpty(teamsByTrophies)}" class="alert alert-info text-center shadow-sm">
-        No hay equipos registrados.
-    </div>
+    <h2 class="fw-bold text-center mb-5">
+        <i class="bi bi-shield-fill me-2 text-primary"></i>Equipos
+    </h2>
 
+    <!-- Agrupado por juego -->
     <div th:each="entry : ${teamsByTrophies}" class="mb-5">
 
-        <div class="d-flex align-items-center mb-3">
-            <div class="p-2 bg-primary text-white rounded-3 me-3">
-                <i class="bi bi-controller fs-4"></i>
-            </div>
-            <h3 class="fw-bold text-uppercase m-0" th:text="${entry.key.gameName}">Nombre del Juego</h3>
+        <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+            <h3 class="mb-0">
+                <i class="bi bi-controller me-2 text-primary"></i>
+                <span th:text="${entry.key.gameName}">GAME NAME</span>
+            </h3>
         </div>
 
-        <div class="container mt-3">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="row row-cols-3 g-4">
+            <div th:each="team : ${entry.value}">
+                <div class="card team-card-hover overflow-hidden"
+                     style="position:relative; cursor:pointer;">
 
-                <div class="col" th:each="team, iterStat : ${entry.value}">
+                    <!-- Logo -->
+                    <div class="text-center" style="padding:1.5rem 1rem 1rem; background:var(--bg-surface);">
+                        <img th:src="${team.imageUrl != null && !team.imageUrl.isEmpty()
+                           ? team.imageUrl
+                           : 'https://placehold.co/200x200/0d1117/00d4ff?text=Logo'}"
+                             style="max-height:110px; width:auto; max-width:100%; object-fit:contain; margin:0 auto;"
+                             th:alt="${team.teamName}">
+                    </div>
 
-                    <div class="card h-100 shadow border-0 position-relative team-card-hover"
-                         th:classappend="${iterStat.index == 0} ? 'border border-warning border-3' : ''"
-                         style="border-radius: 15px;">
+                    <!-- Info -->
+                    <div class="card-body text-center border-top" style="padding:1rem;">
+                        <h5 class="fw-bold mb-1" style="color:var(--text-primary);"
+                            th:text="${team.teamName}">Nombre Equipo</h5>
 
-                        <a th:href="@{/teams/{id}(id=${team.teamId})}" class="stretched-link"></a>
-
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span th:classappend="${iterStat.index == 0} ? 'bg-warning text-dark' : 'bg-dark text-white'"
-                                  class="badge rounded-pill px-3">
-                                #[[${iterStat.count}]]
-                            </span>
-                                <span class="fw-bold text-warning">
-                                <i class="bi bi-trophy-fill"></i> [[${team.trophies}]]
-                            </span>
-                            </div>
-
-                            <div class="text-center mb-3">
-                                <img th:src="${team.imageUrl}" class="img-fluid" style="max-height: 100px; object-fit: contain;" alt="Logo">
-                            </div>
-
-                            <h5 class="card-title text-center fw-bold text-uppercase" th:text="${team.teamName}">Nombre</h5>
-
-                            <p class="text-center text-muted small">
-                                <i class="bi bi-geo-alt"></i> [[${team.country}]]
-                            </p>
-
-                            <hr>
-
-                            <p class="card-text small text-secondary italic">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <span th:text="${team.palmares}">Logros destacados...</span>
-                            </p>
-                        </div>
-
-                        <div class="card-footer bg-transparent border-0 d-flex justify-content-center pb-4">
-                            <div class="btn-group w-100 px-3" style="position: relative; z-index: 2;">
-                                <a th:href="@{/teams/update/{id}(id=${team.teamId})}" class="btn btn-outline-primary rounded-pill me-2">
-                                    <i class="bi bi-pencil"></i> Editar
-                                </a>
-                                <a th:href="@{/teams/delete/{id}(id=${team.teamId})}" class="btn btn-outline-danger rounded-pill"
-                                   onclick="return confirm('¿Eliminar equipo?')">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </div>
+                        <div style="margin-top:0.5rem;">
+              <span class="badge bg-warning">
+                <i class="bi bi-trophy-fill me-1"></i>
+                <span th:text="${team.trophies != null ? team.trophies : 0}">0</span>
+              </span>
                         </div>
                     </div>
+
+                    <a th:href="@{/teams/{id}(id=${team.teamId})}" class="stretched-link"></a>
                 </div>
             </div>
         </div>
+
     </div>
+
+    <div th:if="${teamsByTrophies.isEmpty()}" class="alert alert-info text-center">
+        <i class="bi bi-info-circle me-2"></i>No hay equipos registrados actualmente.
+    </div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
