@@ -8,6 +8,13 @@
     import org.springframework.ui.Model;
     import org.springframework.web.bind.annotation.GetMapping;
     import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RequestParam;
+    import org.springframework.web.bind.annotation.ResponseBody;
+
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
 
     @Controller
     @RequestMapping("")
@@ -34,6 +41,54 @@
             model.addAttribute("totalGame", gameService.findAll().size());
             model.addAttribute("totalTrainers", trainerService.findAllTrainers().size());
             return "index";
+        }
+
+        //Buscador
+        @GetMapping("/api/search")
+        @ResponseBody
+        public List<Map<String, String>> searchDatabase(@RequestParam("q") String query){
+            List<Map<String, String>> results = new ArrayList<>();
+
+            if(query == null || query.trim().isEmpty()){
+                return results;
+            }
+
+            String lowerQuery = query.toLowerCase();
+
+            gameService.findByGameName(lowerQuery).forEach(game -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", game.getGameName());
+                map.put("gameGenre", game.getGameGenre());
+                map.put("type", "Juego");
+                map.put("url", "/games/" + game.getGameId());
+                results.add(map);
+            });
+
+            teamService.findByName(lowerQuery).forEach(team -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", team.getTeamName());
+                map.put("type", "Equipo");
+                map.put("url", "/teams/" + team.getTeamId());
+                results.add(map);
+            });
+
+            playerService.findByPlayerName(lowerQuery).forEach(player -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", player.getPlayerName());
+                map.put("type", "Jugador");
+                map.put("url", "/players/" + player.getPlayerId());
+                results.add(map);
+            });
+
+            trainerService.findByTrainerName(lowerQuery).forEach(trainer -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", trainer.getTrainerName());
+                map.put("type", "Entrenador");
+                map.put("url", "/trainers/" + trainer.getTrainerId());
+                results.add(map);
+            });
+
+            return results.size() > 10 ? results.subList(0, 10) : results;
         }
 
 

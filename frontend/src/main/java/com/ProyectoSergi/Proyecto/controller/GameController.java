@@ -27,7 +27,7 @@ public class GameController {
         return "/lists/listGames";
     }
     @GetMapping("/{id}")
-    public String team(@PathVariable Integer id, Model model){
+    public String team(@PathVariable Long id, Model model){
         Optional<Game> game = gameService.findById(id);
         if(game.isPresent()){
             model.addAttribute("game", game.get());

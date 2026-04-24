@@ -15,7 +15,7 @@ public class League {
     @Id
     @Column(name = "league_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer leagueId;
+    private Long leagueId;
 
 
     @Column(name = "league_name")
@@ -47,10 +47,10 @@ public class League {
     public League() {
     }
 
-    public Integer getLeagueId() {
+    public Long getLeagueId() {
         return leagueId;
     }
-    public void setLeagueId(Integer leagueId) {
+    public void setLeagueId(Long leagueId) {
         this.leagueId = leagueId;
     }
     public String getLeagueName() {

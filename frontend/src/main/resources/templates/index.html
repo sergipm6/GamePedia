@@ -14,7 +14,85 @@
 <div class="container mt-5">
     <h1>Bienvenidos a GamePedia</h1>
     <p class="lead mt-3">Tu enciclopedia de eSports competitivos.</p>
-</div>
+    <div class="position-relative w-100" id="searchContainer">
+        <div class="input-group">
+        <span class="input-group-text bg-dark border-0 text-white rounded-0">
+            <i class="bi bi-search"></i>
+        </span>
+            <input type="text" id="liveSearchInput" class="form-control border-0 shadow-none rounded-0"
+                   placeholder="Buscar en la base de datos..." autocomplete="off">
+        </div>
 
+        <ul id="searchResultsBox" class="list-group position-absolute w-100 shadow d-none"
+            style="top: 100%; z-index: 1000; border-radius: 0;">
+        </ul>
+    </div>
+</div>
+<script>
+    const searchInput = document.getElementById('liveSearchInput');
+    const resultsBox = document.getElementById('searchResultsBox');
+    let timeoutId;
+
+    // Escuchamos cada vez que el usuario teclea algo
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+
+        // Limpiamos resultados si borra el texto
+        if (query.length === 0) {
+            resultsBox.innerHTML = '';
+            resultsBox.classList.add('d-none');
+            return;
+        }
+
+        // Retrasamos la búsqueda 300ms para no saturar la Base de Datos si teclea muy rápido
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+
+            // ¡AQUÍ ES DONDE LE PREGUNTAMOS A LA BASE DE DATOS!
+            fetch('/api/search?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    resultsBox.innerHTML = ''; // Limpiamos caja anterior
+
+                    if (data.length === 0) {
+                        // Si la BD no devuelve nada
+                        resultsBox.innerHTML = '<li class="list-group-item text-muted">❌ No hay coincidencias</li>';
+                        resultsBox.classList.remove('d-none');
+                        return;
+                    }
+
+                    // Si hay datos, pintamos la lista
+                    data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center' +
+                                       ' team-card-hover'; // Reciclamos tu estilo de cursor pointer
+
+                        // Formato: Nombre (Tipo) -> Ej: Faker (Jugador)
+                        li.innerHTML = `
+                            <span class="fw-bold">${item.name}</span>
+                            <span class="badge bg-secondary rounded-pill">${item.type}</span>
+                        `;
+
+                        // Al hacer clic, nos lleva a la URL de ese registro
+                        li.onclick = () => window.location.href = item.url;
+
+                        resultsBox.appendChild(li);
+                    });
+
+                    // Mostramos la caja
+                    resultsBox.classList.remove('d-none');
+                })
+                .catch(error => console.error('Error buscando:', error));
+
+        }, 300);
+    });
+
+    // Ocultar la caja si haces clic fuera del buscador
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('searchContainer').contains(e.target)) {
+            resultsBox.classList.add('d-none');
+        }
+    });
+</script>
 </body>
 </html>

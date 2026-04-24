@@ -14,15 +14,29 @@ public class  Player {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "country")
+    private String country;
+
+
     @Column(name = "player_name")
     private String playerName;
 
     @Column(name = "player_email")
     private String playerEmail;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "position_id")
     private Position position;
+
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -30,13 +44,17 @@ public class  Player {
 
     public Player() {}
 
-    public Player(int playerId, String username, String playerName, String playerEmail, Position position, Team team) {
+    public Player(int playerId, String username, String playerName, String playerEmail, Position position, Team team,  Game game, Integer age, String country, String imageUrl) {
         this.playerId = playerId;
         this.username = username;
         this.playerName = playerName;
         this.playerEmail = playerEmail;
         this.team = team;
         this.position = position;
+        this.game = game;
+        this.age = age;
+        this.country = country;
+        this.imageUrl = imageUrl;
     }
     public int getPlayerId() {
         return playerId;
@@ -72,4 +90,29 @@ public class  Player {
     public void setTeam(Team team) {
         this.team = team;
     }
+    public Game getGame() {
+        return game;
+    }
+    public void setGame(Game game) {
+        this.game = game;
+    }
+    public Integer getAge() {
+        return age;
+    }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+    public String getCountry() {
+        return country;
+    }
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }

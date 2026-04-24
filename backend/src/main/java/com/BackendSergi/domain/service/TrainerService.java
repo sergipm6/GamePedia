@@ -30,6 +30,9 @@ public class TrainerService {
 
         trainerRepository.save(trainer);
     }
+    public List<Trainer> findByTrainerName(String trainerName) {
+        return trainerRepository.findByTrainerName(trainerName);
+    }
     public Trainer save(Trainer trainer) {
         return trainerRepository.save(trainer);
     }

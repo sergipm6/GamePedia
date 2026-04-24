@@ -60,14 +60,14 @@ public class AdminController {
 
     //Delete
     @GetMapping("/deleteGame/{id}")
-    public String deleteGame(@PathVariable Integer id){
+    public String deleteGame(@PathVariable Long id){
         gameService.deleteById(id);
         return "redirect:/games";
     }
 
     //Update
     @GetMapping("/editGame/{id}")
-    public String updateGame(Model model, @PathVariable Integer id){
+    public String updateGame(Model model, @PathVariable Long id){
         gameService.findById(id).ifPresent(game->{
             model.addAttribute("game", game);
         });
@@ -150,6 +150,7 @@ public class AdminController {
         model.addAttribute("player", new Player());
         model.addAttribute("teams", teamService.findAll());
         model.addAttribute("positions", positionService.getAll());
+        model.addAttribute("game", gameService.findAll());
         return "forms/formJugadores";
     }
 

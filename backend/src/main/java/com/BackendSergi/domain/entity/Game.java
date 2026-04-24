@@ -11,7 +11,7 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
-    private Integer gameId;
+    private Long gameId;
 
     @Column(name = "game_name")
     private String gameName;
@@ -37,8 +37,8 @@ public class Game {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "game_leagues",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "league_id")
+            joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "league_id", referencedColumnName = "league_id")
     )
     private Set<League> leagues;
 
@@ -68,11 +68,11 @@ public class Game {
     }
 
 
-    public Integer getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 
-    public void setGameId(Integer gameId) {
+    public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
 

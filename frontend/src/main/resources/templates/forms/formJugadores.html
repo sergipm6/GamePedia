@@ -35,6 +35,18 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="form-label">Edad</label>
+                        <input type="number" th:field="*{age}" class="form-control"
+                             min="16" max="100"  placeholder="18">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Country</label>
+                        <input type="text" th:field="*{country}" class="form-control"
+                                placeholder="Ej: Japan">
+                    </div>
+
+                    <div class="mb-4">
                         <label class="form-label">Email</label>
                         <input type="email" th:field="*{playerEmail}" class="form-control"
                                placeholder="jugador@equipo.com">
@@ -42,11 +54,17 @@
 
                     <div class="mb-4">
                         <label class="form-label">Posición / Rol</label>
-                        <select th:field="*{position}" class="form-select">
-                            <option value="">— Selecciona —</option>
-                            <option th:each="position : ${positions}"
-                                    th:value="${position}"
-                                    th:text="${position}"></option>
+                        <input type="text" th:field="*{position}" class="form-control"
+                                 placeholder="TOPLANER">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Juego</label>
+                        <select th:field="*{game}" class="form-select">
+                            <option value="">— Selecciona juego —</option>
+                            <option th:each="game : ${game}"
+                                    th:value="${game.gameId}"
+                                    th:text="${game.gameName}"></option>
                         </select>
                     </div>
 
@@ -60,7 +78,14 @@
                         </select>
                     </div>
 
-                    <div class="d-grid gap-2">
+
+                    <div class="col-md-6">
+                        <label class="form-label">Foto de perfil</label>
+                        <input type="url" th:field="*{ImageUrl}" class="form-control"
+                               placeholder="https://ejemplo.com/imagen.png">
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-floppy me-1"></i>Guardar Jugador
                         </button>

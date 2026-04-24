@@ -18,7 +18,7 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
     
-    public Optional<Player> findByPlayerName(String playerName) {
+    public List<Player> findByPlayerName(String playerName) {
         return playerRepository.findByPlayerName(playerName);
     }
     public List<Player> findAll() {

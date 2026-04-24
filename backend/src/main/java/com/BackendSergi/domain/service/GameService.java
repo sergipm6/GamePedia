@@ -21,7 +21,7 @@ public class GameService {
         return gameRepository.findAll();
     }
 
-    public Optional<Game> findById(Integer id) {
+    public Optional<Game> findById(Long id) {
         return gameRepository.findById(id);
     }
 
@@ -38,7 +38,7 @@ public class GameService {
     }
 
     @Transactional
-    public void deleteById(Integer id){
+    public void deleteById(Long id){
          gameRepository.deleteById(id);
     }
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
      List<Player> findByPlayerEmail(String playeremail);
-     Optional<Player> findByPlayerName(String playerName);
+     List<Player> findByPlayerName(String playerName);
      List<Player> findAllByTeamTeamName(String teamName);
 
 }

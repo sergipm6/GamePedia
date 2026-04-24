@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    Optional<Team> findByTeamName(String name);
+    List<Team> findByTeamName(String name);
     Optional<Team> findById(Long id);
     List<Team> findAllByOrderByTrophiesDesc();
     @Query("SELECT t FROM Team t LEFT JOIN FETCH t.game LEFT JOIN FETCH t.league LEFT JOIN FETCH t.trainer")
