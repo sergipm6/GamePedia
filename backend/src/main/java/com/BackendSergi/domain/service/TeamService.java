@@ -2,6 +2,7 @@ package com.BackendSergi.domain.service;
 
 import com.BackendSergi.domain.entity.League;
 import com.BackendSergi.domain.entity.Team;
+import com.BackendSergi.domain.entity.Trainer;
 import com.BackendSergi.domain.repository.LeagueRepository;
 import com.BackendSergi.domain.repository.TeamRepository;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class TeamService {
 
     public Optional<Team> findById(long id) {
         return teamRepository.findById(id);
+    }
+
+    public List<Team> findByTeamNameContainingIgnoreCase(String name){
+        return teamRepository.findByTeamNameContainingIgnoreCase(name);
     }
 
     public List<Team> findByName(String name) {

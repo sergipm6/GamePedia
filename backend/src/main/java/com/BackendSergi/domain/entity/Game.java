@@ -2,6 +2,8 @@ package com.BackendSergi.domain.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,6 +29,10 @@ public class Game {
 
     @Column(name = "game_developer")
     private String gameDeveloper;
+
+    @Column(name = "awards")
+    @ElementCollection
+    private List<String> awards = new ArrayList<>();
 
     @Column(name = "release_year")
     private Integer releaseYear;
@@ -55,7 +61,8 @@ public class Game {
 
     public Game(String gameName, String gameImageUrl, String gameDescription,
                 String gameGenre, String gameDeveloper, Integer releaseYear,
-                String mainCompetitions, String peakPlayers, Set<League> leagues) {
+                String mainCompetitions, String peakPlayers, Set<League> leagues,
+                List<String> awards) {
         this.gameName = gameName;
         this.gameImageUrl = gameImageUrl;
         this.gameDescription = gameDescription;
@@ -65,6 +72,7 @@ public class Game {
         this.mainCompetitions = mainCompetitions;
         this.peakPlayers = peakPlayers;
         this.leagues = leagues;
+        this.awards = awards;
     }
 
 
@@ -146,5 +154,13 @@ public class Game {
 
     public void setLeagues(Set<League> leagues) {
         this.leagues = leagues;
+    }
+
+    public List<String> getAwards() {
+        return awards;
+    }
+
+    public void setAwards(List<String> awards) {
+        this.awards = awards;
     }
 }

@@ -47,6 +47,7 @@
                   <option value="RTS">RTS</option>
                   <option value="Fighting">Fighting</option>
                   <option value="Sports">Sports</option>
+                  <option value="Historia">Historia</option>
                   <option value="Card Game">Card Game</option>
                   <option value="Other">Otro</option>
                 </select>
@@ -87,6 +88,23 @@
                        placeholder="Ej: Worlds, LEC, LCK, LCS...">
               </div>
 
+              <!-- Premios -->
+              <div class="col-12">
+                <label class="form-label">Premios</label>
+                <div class="input-group mb-2">
+                  <input type="text" id="awardInput" class="form-control" placeholder="Ej: GOTY 2023">
+                  <button class="btn btn-outline-primary mt-3" type="button" onclick="addAward()">Añadir</button>
+                </div>
+
+                <ul id="awardsList" class="list-group mb-3">
+                  <li th:each="award, stat : *{awards}" class="list-group-item d-flex justify-content-between align-items-center">
+                    <span th:text="${award}"></span>
+                    <input type="hidden" th:field="*{awards[__${stat.index}__]}" th:value="${award}">
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removeAward(this)">×</button>
+                  </li>
+                </ul>
+              </div>
+
               <!-- Descripción -->
               <div class="col-12">
                 <label class="form-label">Historia / Descripción</label>
@@ -112,6 +130,34 @@
     </div>
   </div>
 </div>
+<script>
+  function addAward() {
+        const input = document.getElementById('awardInput');
+        const value = input.value.trim();
+        if (value === "") return;
 
+        const list = document.getElementById('awardsList');
+        const index = list.children.length;
+
+        const li = document.createElement('li');
+        li.className = "list-group-item d-flex justify-content-between align-items-center mt-1";
+        li.innerHTML = `
+            <span>${value}</span>
+            <input type="hidden" name="awards[${index}]" value="${value}">
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeAward(this)">×</button>
+        `;
+
+        list.appendChild(li);
+        input.value = ""; // Limpiar input
+    }
+
+    function removeAward(btn) {
+        btn.parentElement.remove();
+        // Opcional: Renumerar índices si Spring se queja de huecos en la lista
+        Array.from(document.querySelectorAll('#awardsList input')).forEach((input, i) => {
+            input.name = `awards[${i}]`;
+        });
+    }
+</script>
 </body>
 </html>

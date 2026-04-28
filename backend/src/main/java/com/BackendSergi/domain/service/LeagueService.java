@@ -28,6 +28,10 @@ public class LeagueService {
         return leagueRepository.findByLeagueName(leaguename);
     }
 
+    public List<League> findLeagueNameContainingIgnoreCase(String name){
+        return leagueRepository.findByLeagueNameContainingIgnoreCase(name);
+    }
+
     public List<League> findAllCustomOrder() {
         return leagueRepository.findAllCustomOrder();
     }

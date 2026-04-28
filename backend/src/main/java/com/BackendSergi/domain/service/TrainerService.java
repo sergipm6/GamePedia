@@ -1,5 +1,6 @@
 package com.BackendSergi.domain.service;
 
+import com.BackendSergi.domain.entity.Game;
 import com.BackendSergi.domain.entity.Team;
 import com.BackendSergi.domain.entity.Trainer;
 import com.BackendSergi.domain.repository.TrainerRepository;
@@ -30,6 +31,11 @@ public class TrainerService {
 
         trainerRepository.save(trainer);
     }
+
+    public List<Trainer> findByTrainerNameContainingIgnoreCase (String trainerName) {
+        return trainerRepository.findByTrainerNameContainingIgnoreCase(trainerName);
+    }
+
     public List<Trainer> findByTrainerName(String trainerName) {
         return trainerRepository.findByTrainerName(trainerName);
     }

@@ -2,6 +2,7 @@ package com.BackendSergi.domain.repository;
 
 import com.BackendSergi.domain.entity.League;
 import com.BackendSergi.domain.entity.Team;
+import com.BackendSergi.domain.entity.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,5 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findAllByOrderByTrophiesDesc();
     @Query("SELECT t FROM Team t LEFT JOIN FETCH t.game LEFT JOIN FETCH t.league LEFT JOIN FETCH t.trainer")
     List<Team> findAllWithRelations();
+    List<Team> findByTeamNameContainingIgnoreCase(String name);
 }

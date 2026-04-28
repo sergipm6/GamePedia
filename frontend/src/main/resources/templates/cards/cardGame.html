@@ -103,7 +103,9 @@
                     </div>
 
                     <!-- Competiciones principales -->
-                    <div class="card border-primary p-3" th:if="${game.mainCompetitions != null}">
+                    <div class="card border-primary p-3"
+                         th:if="${game.mainCompetitions != null && !#strings.isEmpty(game.mainCompetitions)}">
+
                         <h4 class="section-title h5">
                             <i class="bi bi-trophy-fill me-2" style="color:var(--accent-gold);"></i>Competiciones
                         </h4>
@@ -111,6 +113,21 @@
                            th:text="${game.mainCompetitions}">
                             Worlds, LEC, LCK...
                         </p>
+                    </div>
+
+                    <div class="card border-primary p-3"
+                         th:if="${game.awards != null && !game.awards.isEmpty()}">
+
+                        <h4 class="section-title h5">
+                            <i class="bi bi-trophy-fill me-2" style="color:var(--accent-gold);"></i>Premios
+                        </h4>
+
+                        <ul class="list-unstyled mb-0" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <li th:each="award : ${game.awards}" class="small" style="color: var(--text-secondary); display: flex; align-items: flex-start; gap: 0.5rem;">
+                                <i class="bi bi-patch-check-fill" style="color: var(--accent-gold); font-size: 0.8rem; margin-top: 0.2rem;"></i>
+                                <span th:text="${award}">Nombre del Premio</span>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>

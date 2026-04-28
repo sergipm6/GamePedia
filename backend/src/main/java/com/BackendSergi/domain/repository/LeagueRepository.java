@@ -17,5 +17,5 @@ public interface LeagueRepository extends JpaRepository<League, Long > {
 
     @Query("SELECT l FROM League l ORDER BY l.game.gameName ASC, l.international DESC, l.leagueName ASC")
     List<League> findAllCustomOrder();
-
+    List<League> findByLeagueNameContainingIgnoreCase(String leagueName);
 }

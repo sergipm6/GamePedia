@@ -37,6 +37,10 @@ public class GameService {
         return gameRepository.count();
     }
 
+    public List<Game> findByGameNameContainingIgnoreCase(String gameName){
+        return gameRepository.findByGameNameContainingIgnoreCase(gameName);
+    }
+
     @Transactional
     public void deleteById(Long id){
          gameRepository.deleteById(id);

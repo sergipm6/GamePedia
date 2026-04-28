@@ -3,7 +3,7 @@ package com.BackendSergi.domain.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "trainer_table")
+@Table(name = "trainers")
 public class Trainer {
 
     @Id
