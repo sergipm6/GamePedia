@@ -55,7 +55,8 @@
 
             String lowerQuery = query.toLowerCase();
 
-            gameService.findByGameName(lowerQuery).forEach(game -> {
+            gameService.findByGameNameContainingIgnoreCase(
+                    lowerQuery).forEach(game -> {
                 Map<String, String> map = new HashMap<>();
                 map.put("name", game.getGameName());
                 map.put("gameGenre", game.getGameGenre());
@@ -64,7 +65,7 @@
                 results.add(map);
             });
 
-            teamService.findByName(lowerQuery).forEach(team -> {
+            teamService.findByTeamNameContainingIgnoreCase(lowerQuery).forEach(team -> {
                 Map<String, String> map = new HashMap<>();
                 map.put("name", team.getTeamName());
                 map.put("type", "Equipo");
@@ -72,7 +73,7 @@
                 results.add(map);
             });
 
-            playerService.findByPlayerName(lowerQuery).forEach(player -> {
+            playerService.findByPlayerNameContainingIgnoreCase(lowerQuery).forEach(player -> {
                 Map<String, String> map = new HashMap<>();
                 map.put("name", player.getPlayerName());
                 map.put("type", "Jugador");
@@ -80,7 +81,7 @@
                 results.add(map);
             });
 
-            trainerService.findByTrainerName(lowerQuery).forEach(trainer -> {
+            trainerService.findByTrainerNameContainingIgnoreCase(lowerQuery).forEach(trainer -> {
                 Map<String, String> map = new HashMap<>();
                 map.put("name", trainer.getTrainerName());
                 map.put("type", "Entrenador");
