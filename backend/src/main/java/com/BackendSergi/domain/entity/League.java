@@ -17,7 +17,6 @@ public class League {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long leagueId;
 
-
     @Column(name = "league_name")
     private String leagueName;
 
@@ -27,21 +26,24 @@ public class League {
     @Column(columnDefinition = "BOOLEAN")
     private Boolean international;
 
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
-    @JsonManagedReference
+
+    @ManyToMany(mappedBy = "leagues")
     private List<Team> teams;
 
     @ManyToOne
     @JoinColumn(name = "game_id")
-    Game game;
+    private Game game;
 
 
-    public League(String leagueName, String leagueDescription, Game game, Boolean international) {
+    public League(String leagueName, String leagueDescription, Game game, Boolean international, String imageUrl) {
         this.leagueName = leagueName;
         this.leagueDescription = leagueDescription;
         this.game = game;
         this.international = international;
+        this.imageUrl = imageUrl;
     }
 
     public League() {
@@ -77,10 +79,19 @@ public class League {
     public void setGame(Game game) {
         this.game = game;
     }
-    public boolean isInternational() {
+    public Boolean getInternational() {
         return international;
     }
-    public void setInternational(boolean international) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public Boolean isInternational() {
+        return international != null && international;
+    }
+    public void setInternational(Boolean international) {
         this.international = international;
     }
 }

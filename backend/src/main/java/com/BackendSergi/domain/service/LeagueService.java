@@ -20,7 +20,7 @@ public class LeagueService {
         return leagueRepository.findAll();
     }
 
-    public Optional<League> findById(Integer id) {
+    public Optional<League> findById(Long id) {
         return leagueRepository.findByLeagueId(id);
     }
 
@@ -41,7 +41,7 @@ public class LeagueService {
     }
 
 
-    public void delete(Integer id) {
+    public void delete(Long id) {
         leagueRepository.deleteByLeagueId(id);
     }
 

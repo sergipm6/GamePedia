@@ -42,7 +42,7 @@
       <!-- Page header -->
       <div class="d-flex justify-content-between align-items-center pb-2 mb-4 border-bottom">
         <h1 class="h2">Panel de Control</h1>
-        <span class="badge bg-primary" th:text="'Admin'">Admin</span>
+        <span class="badge bg-primary">Admin</span>
       </div>
 
       <!-- Action cards -->
@@ -53,7 +53,16 @@
             <div class="display-5 text-primary mb-2"><i class="bi bi-controller"></i></div>
             <h5 style="color:var(--text-primary); margin-bottom:0.5rem;">Videojuegos</h5>
             <p class="small text-muted mb-3">Añade o edita los juegos base del sistema.</p>
-            <a th:href="@{admin/newGame}" class="btn btn-primary btn-sm">Nuevo Juego</a>
+            <a th:href="@{/admin/newGame}" class="btn btn-primary btn-sm">Nuevo Juego</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="card admin-card text-center" style="padding:2rem 1rem;">
+            <div class="display-5 mb-2" style="color:var(--accent-gold);"><i class="bi bi-trophy-fill"></i></div>
+            <h5 style="color:var(--text-primary); margin-bottom:0.5rem;">Ligas y Torneos</h5>
+            <p class="small text-muted mb-3">Crea competiciones y asígnalas a un juego.</p>
+            <a th:href="@{/admin/newLeague}" class="btn btn-warning btn-sm">Nueva Liga</a>
           </div>
         </div>
 
@@ -71,9 +80,19 @@
             <div class="display-5 mb-2" style="color:#60cfff;"><i class="bi bi-person-badge-fill"></i></div>
             <h5 style="color:var(--text-primary); margin-bottom:0.5rem;">Jugadores</h5>
             <p class="small text-muted mb-3">Ficha jugadores y asígnales roles.</p>
-            <a th:href="@{/admin/newPlayer}" class="btn btn-sm" style="background:rgba(0,180,255,0.15);color:#60cfff;border:1px solid rgba(0,180,255,0.3);">
+            <a th:href="@{/admin/newPlayer}" class="btn btn-sm"
+               style="background:rgba(0,180,255,0.15);color:#60cfff;border:1px solid rgba(0,180,255,0.3);">
               Nuevo Jugador
             </a>
+          </div>
+        </div>
+
+        <div>
+          <div class="card admin-card text-center" style="padding:2rem 1rem;">
+            <div class="display-5 mb-2" style="color:var(--accent-red);"><i class="bi bi-person-video2"></i></div>
+            <h5 style="color:var(--text-primary); margin-bottom:0.5rem;">Entrenadores</h5>
+            <p class="small text-muted mb-3">Gestiona el cuerpo técnico de los equipos.</p>
+            <a th:href="@{/admin/newTrainer}" class="btn btn-outline-danger btn-sm">Nuevo Entrenador</a>
           </div>
         </div>
 
@@ -82,10 +101,102 @@
       <!-- Tables row -->
       <div class="row g-4">
 
+        <!-- Juegos -->
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <i class="bi bi-controller me-2"></i>Juegos
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Género</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="game : ${games}">
+                  <td th:text="${game.gameName}">Juego</td>
+                  <td>
+                    <span class="badge bg-primary" th:text="${game.gameGenre ?: '—'}"></span>
+                  </td>
+                  <td style="display:flex; gap:0.4rem;">
+                    <a th:href="@{/admin/editGame/{id}(id=${game.gameId})}"
+                       class="btn btn-sm btn-outline-warning">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <a th:href="@{/admin/deleteGame/{id}(id=${game.gameId})}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('¿Seguro?')">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(games)}">
+                  <td colspan="3" class="text-center text-muted">No hay juegos</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ligas -->
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <i class="bi bi-trophy-fill me-2"></i>Ligas y Torneos
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Juego</th>
+                  <th>Tipo</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="league : ${leagues}">
+                  <td th:text="${league.leagueName}">Liga</td>
+                  <td>
+                      <span class="badge bg-dark"
+                            th:text="${league.game != null ? league.game.gameName : '—'}"></span>
+                  </td>
+                  <td>
+                    <span th:if="${league.international}" class="badge bg-warning">Internacional</span>
+                    <span th:unless="${league.international}" class="badge bg-dark">Regional</span>
+                  </td>
+                  <td style="display:flex; gap:0.4rem;">
+                    <a th:href="@{/admin/editLeague/{id}(id=${league.leagueId})}"
+                       class="btn btn-sm btn-outline-warning">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <a th:href="@{/admin/deleteLeague/{id}(id=${league.leagueId})}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('¿Seguro?')">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(leagues)}">
+                  <td colspan="4" class="text-center text-muted">No hay ligas</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- Equipos -->
         <div class="col-md-6">
           <div class="card shadow-sm">
-            <div class="card-header">Últimos Equipos Añadidos</div>
+            <div class="card-header">
+              <i class="bi bi-shield-fill me-2"></i>Equipos
+            </div>
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead>
@@ -96,9 +207,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="team : ${teams}">
-                  <td th:text="${team.teamName}">Nombre Equipo</td>
+                  <td th:text="${team.teamName}">Equipo</td>
                   <td style="display:flex; gap:0.4rem;">
-                    <a th:href="@{/admin/updateTeam/{id}(id=${team.teamId})}"
+                    <a th:href="@{/admin/editTeam/{id}(id=${team.teamId})}"
                        class="btn btn-sm btn-outline-warning">
                       <i class="bi bi-pencil"></i>
                     </a>
@@ -109,6 +220,9 @@
                     </a>
                   </td>
                 </tr>
+                <tr th:if="${#lists.isEmpty(teams)}">
+                  <td colspan="2" class="text-center text-muted">No hay equipos</td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -118,7 +232,9 @@
         <!-- Jugadores -->
         <div class="col-md-6">
           <div class="card shadow-sm">
-            <div class="card-header">Jugadores en el Sistema</div>
+            <div class="card-header">
+              <i class="bi bi-person-badge-fill me-2"></i>Jugadores
+            </div>
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead>
@@ -131,7 +247,7 @@
                 <tr th:each="player : ${players}">
                   <td th:text="${player.username}">Nick</td>
                   <td style="display:flex; gap:0.4rem;">
-                    <a th:href="@{/admin/updatePlayer/{id}(id=${player.playerId})}"
+                    <a th:href="@{/admin/editPlayer/{id}(id=${player.playerId})}"
                        class="btn btn-sm btn-outline-warning">
                       <i class="bi bi-pencil"></i>
                     </a>
@@ -142,6 +258,9 @@
                     </a>
                   </td>
                 </tr>
+                <tr th:if="${#lists.isEmpty(players)}">
+                  <td colspan="2" class="text-center text-muted">No hay jugadores</td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -149,7 +268,6 @@
         </div>
 
       </div>
-
     </main>
   </div>
 </div>

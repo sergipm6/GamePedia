@@ -12,8 +12,8 @@ import java.util.Optional;
 public interface LeagueRepository extends JpaRepository<League, Long > {
 
     Optional<League> findByLeagueName(String name);
-    Optional<League> findByLeagueId(Integer id);
-    Integer deleteByLeagueId(Integer id);
+    Optional<League> findByLeagueId(Long id);
+    Integer deleteByLeagueId(Long id);
 
     @Query("SELECT l FROM League l ORDER BY l.game.gameName ASC, l.international DESC, l.leagueName ASC")
     List<League> findAllCustomOrder();

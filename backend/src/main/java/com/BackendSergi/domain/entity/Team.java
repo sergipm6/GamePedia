@@ -42,10 +42,13 @@ public class Team {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Player> players;
 
-    @ManyToOne
-    @JoinColumn(name = "league_id")
-    @JsonBackReference
-    private League league;
+    @ManyToMany
+    @JoinTable(
+            name = "team_leagues",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "league_id")
+    )
+    private List<League> leagues;
 
     @OneToOne(mappedBy ="team")
     private Trainer trainer;
@@ -57,7 +60,7 @@ public class Team {
     public Team() {}
 
     public Team(String teamName, String country, LocalDate teamCreated, Integer trophies, String history,
-                String palmares, String imageUrl) {
+                String palmares, String imageUrl, List<Player> players, Game game, List<League> leagues, Trainer trainer) {
         this.teamName = teamName;
         this.country = country;
         this.teamCreated = teamCreated;
@@ -65,6 +68,10 @@ public class Team {
         this.history = history;
         this.palmares = palmares;
         this.imageUrl = imageUrl;
+        this.players = players;
+        this.game = game;
+        this.leagues = leagues;
+
     }
 
     public int getTeamId() {
@@ -101,11 +108,11 @@ public class Team {
     public void setTrainer(Trainer trainer) {
         this.trainer = trainer;
     }
-    public League getLeague() {
-        return league;
+    public List<League> getLeagues() {
+        return leagues;
     }
-    public void setLeague(League league) {
-        this.league = league;
+    public void setLeagues(List<League> leagues) {
+        this.leagues = leagues;
     }
     public Game getGame() {return game;}
     public void setGame(Game game) {this.game = game;}

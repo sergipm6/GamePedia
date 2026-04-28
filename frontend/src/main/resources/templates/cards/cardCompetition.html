@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${league.leagueName}">Detalle de la Liga</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<div th:replace="~{templateFragments/navBar :: menuComun}"></div>
+
+<div class="container mt-5 mb-5">
+  <div class="card shadow border-0 overflow-hidden" style="background: var(--bg-card);">
+
+    <div class="hero-game"
+         th:style="${league.imageUrl != null && !league.imageUrl.isEmpty()}
+             ? 'background-image: linear-gradient(to bottom, rgba(8,12,16,0.2) 0%, rgba(8,12,16,0.95) 100%), url(' + ${league.imageUrl} + '); background-size: cover; background-position: center;'
+             : 'background: linear-gradient(135deg, #1a1c2c 0%, #0d0e14 100%);'">
+
+      <div class="hero-game-content">
+        <div class="d-flex align-items-center gap-3 mb-3">
+                    <span th:if="${league.international}" class="game-badge" style="background: var(--accent-gold); color: #000;">
+                        <i class="bi bi-globe2 me-1"></i> Internacional
+                    </span>
+          <span th:unless="${league.international}" class="game-badge">
+                        <i class="bi bi-geo-alt me-1"></i> Regional
+                    </span>
+          <span class="text-white-50">|</span>
+          <span class="text-uppercase fw-bold small" style="letter-spacing: 2px;"
+                th:text="${league.game != null ? league.game.gameName : 'Juego no definido'}">Juego</span>
+        </div>
+
+        <h1 class="display-3 fw-bold mb-2" th:text="${league.leagueName}">Nombre de la Liga</h1>
+
+        <div class="hero-meta d-flex flex-wrap gap-4">
+                    <span th:if="${league.game != null}">
+                        <i class="bi bi-controller text-primary me-1"></i>
+                        <span th:text="${league.game.gameGenre}">Género</span>
+                    </span>
+          <span>
+                        <i class="bi bi-people-fill text-primary me-1"></i>
+                        <span th:text="${league.teams != null ? league.teams.size() : '0'} + ' Equipos Participantes'">0 Equipos</span>
+                    </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-lg-5">
+      <div class="row g-5">
+
+        <div class="col-md-8">
+          <section class="mb-5">
+            <h3 class="section-title text-uppercase" style="font-size: 1.2rem; letter-spacing: 1px;">
+              <i class="bi bi-info-circle-fill me-2 text-primary"></i>Descripción de la Competición
+            </h3>
+            <p class="lh-lg text-secondary" style="white-space: pre-line;"
+               th:text="${league.leagueDescription}">
+              Aquí va la descripción de la liga cargada desde la base de datos.
+            </p>
+          </section>
+
+          <section>
+            <h3 class="section-title text-uppercase" style="font-size: 1.2rem; letter-spacing: 1px;">
+              <i class="bi bi-shield-shaded me-2 text-primary"></i>Equipos en esta Liga
+            </h3>
+            <div class="row row-cols-1 row-cols-sm-2 g-3 mt-3">
+              <div th:each="team : ${league.teams}">
+                <a th:href="@{/teams/{id}(id=${team.teamId})}" class="text-decoration-none">
+                  <div class="d-flex align-items-center p-3 rounded" style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                    <img th:src="${team.imageUrl}" class="me-3" style="width: 45px; height: 45px; object-fit: contain;">
+                    <div>
+                      <div class="fw-bold text-white" th:text="${team.teamName}">Nombre Equipo</div>
+                      <div class="small text-muted">
+                        <i class="bi bi-trophy-fill text-warning me-1"></i>
+                        <span th:text="${team.trophies}">0</span> Trofeos
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card p-4" style="background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.05);">
+            <h5 class="section-title h6 mb-4 text-uppercase">Sobre el Juego</h5>
+
+            <div class="text-center mb-4" th:if="${league.game != null}">
+              <img th:src="${league.game.gameImageUrl}" class="img-fluid rounded shadow-sm mb-3">
+              <h6 class="fw-bold mb-1" th:text="${league.game.gameName}">Nombre Juego</h6>
+              <p class="small text-muted" th:text="${league.game.gameDeveloper}">Desarrollador</p>
+            </div>
+
+            <hr style="border-color: rgba(255,255,255,0.1);">
+
+            <div class="d-flex justify-content-between mb-2">
+              <span class="small text-muted">Lanzamiento</span>
+              <span class="small fw-bold" th:text="${league.game != null ? league.game.releaseYear : 'N/A'}">2009</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="small text-muted">Pico de Jugadores</span>
+              <span class="small fw-bold text-accent-cyan" th:text="${league.game != null ? league.game.peakPlayers : 'N/A'}">180M</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-5 pt-4 border-top d-flex justify-content-between align-items-center">

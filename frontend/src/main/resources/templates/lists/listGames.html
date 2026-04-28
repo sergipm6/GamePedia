@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gestión de Juegos | GamePedia</title>
+    <title>Juegos | GamePedia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
@@ -11,19 +12,26 @@
 
 <div th:replace="~{templateFragments/navBar :: menuComun}"></div>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
 
-    <!-- Header -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">
-            <i class="bi bi-controller me-2"></i>
+            <i class="bi bi-controller me-2"></i>Juegos
         </h2>
+
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/newGame}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nuevo Juego
+        </a>
     </div>
 
-    <!-- Grid de juegos -->
+
     <div class="row row-cols-3 g-4">
         <div th:each="game : ${games}">
             <div class="card team-card-hover overflow-hidden" style="position:relative;">
+
 
                 <div class="game-img-container" style="height:200px;">
                     <img th:src="${game.gameImageUrl != null && !game.gameImageUrl.isEmpty()
@@ -32,74 +40,51 @@
                          th:alt="${game.gameName}">
                 </div>
 
+
                 <div class="card-body text-center" style="padding:1rem;">
-                    <h5 class="fw-bold text-uppercase mb-1" th:text="${game.gameName}">Nombre del Juego</h5>
+                    <h5 class="fw-bold text-uppercase mb-1" th:text="${game.gameName}">Nombre</h5>
+
+
+                    <span th:if="${game.gameGenre != null}"
+                          class="badge bg-primary mb-2"
+                          th:text="${game.gameGenre}">MOBA</span>
+
+
+                    <div th:if="${game.hasCompetitiveScene}">
+                        <span class="badge bg-warning">
+                            <i class="bi bi-trophy-fill me-1"></i>Escena Competitiva
+                        </span>
+                    </div>
                 </div>
 
-                <div class="card-footer d-flex justify-content-center" style="gap:0.5rem; padding-bottom:1.25rem;">
-                    <a th:href="@{/admin/editGame/{id}(id=${game.gameId})}" class="btn btn-dark btn-sm">
+
+                <div sec:authorize="hasRole('ADMIN')"
+                     class="card-footer d-flex justify-content-center"
+                     style="gap:0.5rem; padding-bottom:1.25rem; position:relative; z-index:2;">
+                    <a th:href="@{/admin/editGame/{id}(id=${game.gameId})}"
+                       class="btn btn-dark btn-sm">
                         <i class="bi bi-pencil-square"></i>
                     </a>
-                    <a th:href="@{/admin/deleteGame /{id}(id=${game.gameId})}"
+                    <a th:href="@{/admin/deleteGame/{id}(id=${game.gameId})}"
                        class="btn btn-outline-danger btn-sm"
                        onclick="return confirm('¿Estás seguro de eliminar este juego?')">
                         <i class="bi bi-trash3"></i>
                     </a>
                 </div>
+
+
                 <a th:href="@{/games/{id}(id=${game.gameId})}" class="stretched-link"></a>
             </div>
         </div>
     </div>
 
-    <!-- Empty state -->
+
     <div th:if="${#lists.isEmpty(games)}" class="alert alert-warning mt-5">
         <i class="bi bi-exclamation-triangle me-2"></i>No hay juegos guardados.
     </div>
 
 </div>
 
-<!-- Modal: Añadir Juego -->
-<div class="modal fade" id="modalAddGame" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="modal-title">🎮 Nuevo Juego</h5>
-                <button class="btn-close btn-close-white"
-                        onclick="document.getElementById('modalAddGame').classList.remove('show')">✕</button>
-            </div>
-
-            <form th:action="@{/games/newGame}" method="post">
-                <div class="modal-body">
-
-                    <div class="mb-4">
-                        <label for="gameName" class="form-label">Nombre del Juego</label>
-                        <input type="text" class="form-control form-control-lg"
-                               id="gameName" name="gameName"
-                               placeholder="Ej: Valorant, League of Legends..." required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="gameImageUrl" class="form-label">URL del Banner</label>
-                        <input type="url" class="form-control"
-                               id="gameImageUrl" name="gameImageUrl"
-                               placeholder="https://link-a-la-imagen.jpg">
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                            onclick="document.getElementById('modalAddGame').classList.remove('show')">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary px-4">Guardar Juego</button>
-                </div>
-            </form>
-
-        </div>
-    </div>
-</div>
-
+<div th:replace="~{templateFragments/footer :: footer}"></div>
 </body>
 </html>

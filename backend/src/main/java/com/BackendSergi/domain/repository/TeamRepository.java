@@ -16,7 +16,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findByTeamName(String name);
     Optional<Team> findById(Long id);
     List<Team> findAllByOrderByTrophiesDesc();
-    @Query("SELECT t FROM Team t LEFT JOIN FETCH t.game LEFT JOIN FETCH t.league LEFT JOIN FETCH t.trainer")
+    @Query("SELECT t FROM Team t LEFT JOIN FETCH t.game LEFT JOIN FETCH t.leagues LEFT JOIN FETCH t.trainer")
     List<Team> findAllWithRelations();
     List<Team> findByTeamNameContainingIgnoreCase(String name);
 }

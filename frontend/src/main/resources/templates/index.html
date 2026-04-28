@@ -13,7 +13,7 @@
 
 <div class="container mt-5">
     <h1>Bienvenidos a GamePedia</h1>
-    <p class="lead mt-3">Tu enciclopedia de eSports competitivos.</p>
+    <p class="lead mt-3">Tu enciclopedia de videojuegos.</p>
     <div class="position-relative w-100" id="searchContainer">
         <div class="input-group">
         <span class="input-group-text bg-dark border-0 text-white rounded-0">
@@ -28,6 +28,7 @@
         </ul>
     </div>
 </div>
+
 <script>
     const searchInput = document.getElementById('liveSearchInput');
     const resultsBox = document.getElementById('searchResultsBox');
@@ -94,5 +95,6 @@
         }
     });
 </script>
+<div th:replace="~{templateFragments/footer :: footer}"></div>
 </body>
 </html>

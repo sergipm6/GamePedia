@@ -77,8 +77,8 @@ GamePedia/
 
 1. **Clona el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/gamepedia.git
-   cd gamepedia
+   git clone https://github.com/sergipm6/GamePedia.git
+   cd GamePedia
    ```
 
 2. **Genera el JAR del frontend**
