@@ -13,90 +13,131 @@
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-
-            <h1 class="mb-4">
-                <i class="bi bi-person-plus-fill me-2 text-primary"></i>Añadir Jugador
-            </h1>
+        <div class="col-md-8 col-lg-6"> <h1 class="mb-4 text-center">
+            <i class="bi bi-person-plus-fill me-2 text-primary"></i>Añadir Jugador
+        </h1>
 
             <div class="card shadow p-4">
-                <form th:action="@{/add/players}" th:object="${player}" method="post">
+                <form th:action="@{/admin/savePlayer}" th:object="${player}" method="post">
 
-                    <div class="mb-4">
-                        <label class="form-label">Nombre Real</label>
-                        <input type="text" th:field="*{playerName}" class="form-control"
-                               placeholder="Ej: Lee Sang-hyeok">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Nombre Real</label>
+                            <input type="text" th:field="*{playerName}" class="form-control"
+                                   placeholder="Ej: Lee Sang-hyeok">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Username / Alias</label>
+                            <input type="text" th:field="*{username}" class="form-control"
+                                   placeholder="Ej: Faker, s1mple...">
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Username / Alias</label>
-                        <input type="text" th:field="*{username}" class="form-control"
-                               placeholder="Ej: Faker, s1mple...">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-bold">Edad</label>
+                            <input type="number" th:field="*{age}" class="form-control"
+                                   min="16" max="100" placeholder="18">
+                        </div>
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label fw-bold">País</label>
+                            <input type="text" th:field="*{country}" class="form-control"
+                                   placeholder="Ej: South Korea">
+                        </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Edad</label>
-                        <input type="number" th:field="*{age}" class="form-control"
-                             min="16" max="100"  placeholder="18">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Country</label>
-                        <input type="text" th:field="*{country}" class="form-control"
-                                placeholder="Ej: Japan">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">Email</label>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
                         <input type="email" th:field="*{playerEmail}" class="form-control"
                                placeholder="jugador@equipo.com">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Posición / Rol</label>
-                        <input type="text" th:field="*{position}" class="form-control"
-                                 placeholder="TOPLANER">
-                    </div>
+                    <hr class="my-4">
 
-                    <div class="mb-4">
-                        <label class="form-label">Juego</label>
-                        <select th:field="*{game}" class="form-select">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Juego</label>
+                        <select th:field="*{game}" class="form-select" id="gameSelect"
+                                onchange="filterPositions()">
                             <option value="">— Selecciona juego —</option>
-                            <option th:each="game : ${game}"
-                                    th:value="${game.gameId}"
-                                    th:text="${game.gameName}"></option>
+                            <option th:each="g : ${games}"
+                                    th:value="${g.gameId}"
+                                    th:text="${g.gameName}"></option>
                         </select>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label">Equipo</label>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Posición / Rol</label>
+                        <select th:field="*{position}" class="form-select" id="positionSelect">
+                            <option value="">— Selecciona primero un juego —</option>
+                            <option th:each="pos : ${positions}"
+                                    th:value="${pos.positionId}"
+                                    th:text="${pos.positionName}"
+                                    th:attr="data-game=${pos.game != null ? pos.game.gameId : ''}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Equipo</label>
                         <select th:field="*{team}" class="form-select">
                             <option value="">— Selecciona equipo —</option>
-                            <option th:each="team : ${teams}"
-                                    th:value="${team.teamId}"
-                                    th:text="${team.teamName}"></option>
+                            <option th:each="t : ${teams}"
+                                    th:value="${t.teamId}"
+                                    th:text="${t.teamName}"></option>
                         </select>
                     </div>
 
-
-                    <div class="col-md-6">
-                        <label class="form-label">Foto de perfil</label>
-                        <input type="url" th:field="*{ImageUrl}" class="form-control"
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Foto de perfil (URL)</label>
+                        <input type="url" th:field="*{imageUrl}" class="form-control"
                                placeholder="https://ejemplo.com/imagen.png">
                     </div>
 
                     <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary btn-lg">
                             <i class="bi bi-floppy me-1"></i>Guardar Jugador
                         </button>
+                        <a th:href="@{/players}" class="btn btn-outline-secondary">Cancelar</a>
                     </div>
 
                 </form>
             </div>
-
         </div>
     </div>
 </div>
+
+<script th:inline="javascript">
+    function filterPositions() {
+        const gameId = document.getElementById('gameSelect').value;
+        const posSelect = document.getElementById('positionSelect');
+        const options = posSelect.querySelectorAll('option');
+        let firstVisible = true;
+
+        options.forEach(opt => {
+            const optGameId = opt.getAttribute('data-game');
+
+            if (opt.value === "") {
+                opt.style.display = "block";
+            } else {
+                if (optGameId === gameId && gameId !== "") {
+                    opt.style.display = "block";
+                    opt.disabled = false;
+                } else {
+                    opt.style.display = "none";
+                    opt.disabled = true;
+                }
+            }
+        });
+
+
+        const currentOption = posSelect.options[posSelect.selectedIndex];
+        if (currentOption && currentOption.style.display === "none") {
+            posSelect.value = "";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', filterPositions);
+</script>
 
 </body>
 </html>

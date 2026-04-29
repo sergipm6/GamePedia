@@ -2,8 +2,11 @@ package com.ProyectoSergi.Proyecto.controller;
 
 
 import com.BackendSergi.domain.entity.Game;
+import com.BackendSergi.domain.entity.League;
 import com.BackendSergi.domain.entity.Team;
 import com.BackendSergi.domain.service.GameService;
+import com.BackendSergi.domain.service.LeagueService;
+import com.BackendSergi.domain.service.TeamService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import java.util.Optional;
 public class GameController {
 
     private GameService gameService;
+    private LeagueService leagueService;
 
     public GameController(GameService gameService) {
         this.gameService = gameService;

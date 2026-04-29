@@ -37,7 +37,8 @@ public class Game {
     @Column(name = "release_year")
     private Integer releaseYear;
 
-
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    private List<Position> positions;
 
     @Column (name = "competitive", columnDefinition = "BOOLEAN")
     private boolean hasCompetitiveScene;
@@ -59,7 +60,7 @@ public class Game {
     public Game(String gameName, String gameImageUrl, String gameDescription,
                 String gameGenre, String gameDeveloper, Integer releaseYear,
                 String peakPlayers, List<League> leagues,
-                List<String> awards, Boolean hasCompetitiveScene) {
+                List<String> awards, Boolean hasCompetitiveScene, List<Position> positions) {
         this.gameName = gameName;
         this.gameImageUrl = gameImageUrl;
         this.gameDescription = gameDescription;
@@ -70,6 +71,7 @@ public class Game {
         this.leagues = leagues;
         this.awards = awards;
         this.hasCompetitiveScene = hasCompetitiveScene;
+        this.positions = positions;
     }
 
 
@@ -159,5 +161,17 @@ public class Game {
 
     public void setHasCompetitiveScene(boolean hasCompetitiveScene) {
         this.hasCompetitiveScene = hasCompetitiveScene;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
+
+    public void addPosition(Position position) {
+        positions.add(position);
+        position.setGame(this);
     }
 }

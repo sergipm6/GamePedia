@@ -14,69 +14,87 @@
 <div class="container mt-5 mb-5">
     <div class="card shadow">
 
-        <!-- Hero -->
-        <div class="hero-team">
-            <div class="mb-2" th:if="${team.league != null and team.league.game != null}">
-                <div class="game-badge">
+        <div class="hero-team text-center p-5 position-relative">
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+                 class="position-absolute top-0 end-0 p-3 d-flex gap-2">
+                <a th:href="@{/admin/editTeam/{id}(id=${team.teamId})}" class="btn btn-dark btn-sm border-warning text-warning">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <button type="button" class="btn btn-dark btn-sm border-danger text-danger"
+                        data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+
+            <div class="d-flex justify-content-center gap-2 mb-2">
+                <div class="game-badge" th:if="${team.game != null}">
                     <i class="bi bi-controller"></i>
-                    <span th:text="${team.league.game.gameName}">Nombre del Juego</span>
+                    <span th:text="${team.game.gameName}">Juego</span>
+                </div>
+                <div class="game-badge" style="background: rgba(255, 255, 255, 0.1); border-color: var(--accent-gold);" th:if="${team.country != null}">
+                    <i class="bi bi-geo-alt text-warning"></i>
+                    <span th:text="${team.country}">País</span>
                 </div>
             </div>
 
             <div class="mb-3" style="margin-top:1.5rem;">
                 <img th:if="${team.imageUrl}" th:src="${team.imageUrl}"
-                     width="120" class="rounded-circle shadow"
+                     width="120" height="120" class="rounded-circle shadow object-fit-cover"
                      style="margin:0 auto; border:3px solid var(--accent-cyan);">
                 <div th:unless="${team.imageUrl}" class="display-1">🛡️</div>
             </div>
 
             <h1 class="display-4 fw-bold" th:text="${team.teamName}">Nombre del Equipo</h1>
 
-            <p class="lead opacity-75" style="margin-top:0.75rem;">
+            <p class="lead opacity-75" style="margin-top:0.75rem;" th:if="${team.leagues != null and !team.leagues.isEmpty()}">
                 <i class="bi bi-trophy small me-1"></i>
-                <span th:text="${team.league.leagueName}">Competición</span>
+                <span th:each="league, iterStat : ${team.leagues}">
+                    <span th:text="${league.leagueName}">Competición</span>
+                    <span th:if="${!iterStat.last}">, </span>
+                </span>
             </p>
         </div>
 
-        <!-- Body -->
         <div class="card-body p-5">
             <div class="row">
-
-                <!-- Historia -->
                 <div class="col-md-8">
                     <h3 class="section-title">Historia</h3>
-                    <p class="lh-lg"
+                    <p class="lh-lg mb-5"
                        style="white-space: pre-line; color: var(--text-secondary);"
-                       th:text="${team.history != null ? team.history : 'Este equipo aún no ha escrito su historia en nuestros registros.'}">
-                        Aquí va la historia detallada...
+                       th:text="${team.history != null and !team.history.isEmpty() ? team.history : 'Este equipo aún no ha escrito su historia.'}">
                     </p>
                 </div>
 
-                <!-- Palmarés -->
                 <div class="col-md-4">
-                    <div class="card border-primary p-3">
+                    <div class="card border-primary p-3" style="background: rgba(0,0,0,0.2); border: 1px solid var(--accent-cyan);">
                         <h3 class="section-title h4">Palmarés</h3>
                         <ul class="list-unstyled">
                             <li class="mb-3 d-flex align-items-center" style="gap:0.75rem;">
-                                <span class="trophy-icon">🏆</span>
+                                <span class="trophy-icon" style="font-size: 1.5rem;">🏆</span>
                                 <div>
                                     <h6 class="mb-0 fw-bold" style="color:var(--text-primary);">Títulos Totales</h6>
-                                    <small style="color:var(--accent-gold);"
-                                           th:text="${team.trophies != null ? team.trophies : '0'}">12</small>
+                                    <small style="color:var(--accent-gold); font-size: 1.1rem;"
+                                           th:text="${team.trophies != null ? team.trophies : '0'}">0</small>
                                 </div>
                             </li>
-                            <hr>
+                            <hr style="border-color: var(--accent-cyan); opacity: 0.3;">
                             <li class="mb-2">
-                                <h6 class="fw-bold text-primary">Logros Destacados:</h6>
-                                <p class="small text-muted"
-                                   th:text="${team.palmares != null ? team.palmares : 'Buscando en las vitrinas...'}">
-                                    Subcampeón de Invierno 2024...
+                                <h6 class="fw-bold text-primary mb-3">Logros Destacados:</h6>
+                                <div th:if="${team.palmares != null and !team.palmares.isEmpty()}">
+                                    <div th:each="p : ${team.palmares}"
+                                         class="d-flex align-items-center mb-2 p-2 rounded"
+                                         style="background: rgba(255,255,255,0.05);">
+                                        <i class="bi bi-patch-check text-info me-2"></i>
+                                        <span class="small text-light" th:text="${p}">Logro</span>
+                                    </div>
+                                </div>
+                                <p class="small text-muted italic" th:unless="${team.palmares != null and !team.palmares.isEmpty()}">
+                                    No hay títulos registrados.
                                 </p>
                             </li>
                         </ul>
                     </div>
                 </div>
-
             </div>
 
             <div class="mt-5 pt-4 border-top text-center">
@@ -85,9 +103,64 @@
                 </a>
             </div>
         </div>
+    </div>
+    <h3 class="section-title mt-4">Plantilla Actual</h3>
+    <div class="row g-3" th:if="${team.players != null and !team.players.isEmpty()}">
+        <div class="col-6 col-lg-4" th:each="player : ${team.players}">
+            <a th:href="@{/players/{id}(id=${player.playerId})}" class="text-decoration-none">
+                <div class="card bg-dark border-secondary p-3 h-100 text-center shadow-sm player-card-hover">
 
+                    <div class="player-avatar mb-3">
+                        <img th:if="${player.imageUrl}" th:src="${player.imageUrl}"
+                             class="rounded-circle border border-info shadow-sm"
+                             width="80" height="80"
+                             style="object-fit: cover; border-width: 2px !important;">
+
+                        <div th:unless="${player.imageUrl}"
+                             class="rounded-circle border border-secondary d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 mx-auto"
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-person-fill display-6 text-muted"></i>
+                        </div>
+                    </div>
+
+                    <h6 class="mb-1 text-light fw-bold" th:text="${player.username}">Nickname</h6>
+
+                    <div class="small text-muted mb-2" th:text="${player.playerName}" style="font-size: 0.75rem;">Nombre Real</div>
+
+                    <div class="mt-auto">
+                    <span class="badge rounded-pill bg-info bg-opacity-10 text-info border border-info border-opacity-25 w-100 py-2"
+                          style="font-size: 0.7rem; letter-spacing: 1px;"
+                          th:text="${player.position != null ? player.position.positionName : 'SIN ROL'}">
+                        ROLE
+                    </span>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border-danger">
+            <div class="modal-header border-danger">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar al equipo <strong th:text="${team.teamName}"></strong>?
+            </div>
+            <div class="modal-footer border-danger">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form th:action="@{/admin/deleteTeam/{id}(id=${team.teamId})}" method="post">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="~{templateFragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

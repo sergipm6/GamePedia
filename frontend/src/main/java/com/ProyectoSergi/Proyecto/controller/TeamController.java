@@ -56,6 +56,7 @@ public class TeamController {
         if(team.isPresent()){
             model.addAttribute("team", team.get());
             model.addAttribute("game", team.get().getGame());
+            model.addAttribute("leagues", team.get().getLeagues());
             return "cards/cardTeam";
         }
         return  "redirect:/";

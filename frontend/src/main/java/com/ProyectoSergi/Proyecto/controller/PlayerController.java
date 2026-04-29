@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/players")
@@ -23,29 +24,18 @@ public class PlayerController {
     public String players(Model model){
         List<Player> players = playerService.findAll();
         model.addAttribute("players", players);
-        return "players";
+        return "lists/listPlayers";
     }
 
-    //Create
-    @PostMapping("/newPlayer")
-    public String newPlayer(@ModelAttribute Player player){
-        playerService.createPlayer(player);
-        return "redirect:/players";
-    }
+   @GetMapping("/{id}")
+    public String player(@PathVariable Long id, Model model){
+        Optional<Player> player = playerService.findById(id);
 
-    //Delete
-    @GetMapping("/delete/{id}")
-    public String deletePlayer(@PathVariable Long id){
-        playerService.deleteByid(id);
-        return "redirect:/players";
-    }
+        if(player.isPresent()){
+            model.addAttribute("player", player.get());
+            return "cards/cardPlayer";
+        }
 
-    //Update
-    @GetMapping("/update/{id}")
-    public String updatePlayer(@PathVariable Long id, Model model){
-        playerService.findById(id).ifPresent(player -> {
-            model.addAttribute("player", player);
-        });
-        return "formPlayer";
-    }
+        return  "lists/listPlayers";
+   }
 }

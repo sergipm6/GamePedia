@@ -2,6 +2,8 @@ package com.BackendSergi.domain.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "positions")
 public class Position {
@@ -13,13 +15,16 @@ public class Position {
     @Column(name = "rol_name")
     private String positionName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id",  nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "game_id")
     private Game game;
+
+    @OneToMany(mappedBy = "position")
+    private List<Player> players;
 
     public Position(){}
 
-    public Position(String positionName, Game game) {
+    public Position(String positionName, Game game,  List<Player> players) {
         this.positionName = positionName;
         this.game = game;
     }
@@ -46,5 +51,13 @@ public class Position {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 }

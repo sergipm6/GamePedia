@@ -6,7 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("admin")
@@ -20,7 +22,9 @@ public class AdminController {
     private TeamService teamService;
     private TrainerService trainerService;
 
-    public AdminController(UserService userService, GameService gameService, LeagueService leagueService, PlayerService playerService, PositionService positionService, TeamService teamService, TrainerService trainerService) {
+    public AdminController(UserService userService, GameService gameService, LeagueService leagueService,
+                           PlayerService playerService, PositionService positionService,
+                           TeamService teamService, TrainerService trainerService) {
         this.userService = userService;
         this.gameService = gameService;
         this.leagueService = leagueService;
@@ -30,90 +34,86 @@ public class AdminController {
         this.trainerService = trainerService;
     }
 
-
+    // ── Dashboard ──────────────────────────────────────────
     @GetMapping("")
     public String dashboard(Model model) {
         model.addAttribute("games", gameService.findAll());
         model.addAttribute("leagues", leagueService.findAll());
         model.addAttribute("players", playerService.findAll());
         model.addAttribute("teams", teamService.findAll());
-        model.addAttribute("teams", teamService.findAll());
-        model.addAttribute("players", playerService.findAll());
         return "private/dashboard";
     }
 
-    //Métodos para games
-
-    //Show form
+    // ── Games ──────────────────────────────────────────────
     @GetMapping("/newGame")
-    public String ShowGameForm(Model model) {
+    public String showGameForm(Model model) {
         model.addAttribute("game", new Game());
         return "forms/formGames";
     }
 
-    //Post
     @PostMapping("/saveGame")
-    public String newGame(@ModelAttribute Game game){
+    public String saveGame(@ModelAttribute Game game,
+                           @RequestParam(value = "positionNames", required = false)
+                           List<String> positionNames) {
+
+        if (positionNames != null && !positionNames.isEmpty()) {
+            List<Position> positions = positionNames.stream()
+                    .map(name -> {
+                        Position p = new Position();
+                        p.setPositionName(name);
+                        p.setGame(game);
+                        return p;
+                    })
+                    .collect(Collectors.toList());
+            game.setPositions(positions);
+        } else {
+            game.setPositions(new ArrayList<>());
+        }
+
         gameService.save(game);
-        return  "redirect:/games";
+        return "redirect:/games";
     }
 
-    //Delete
+    @GetMapping("/editGame/{id}")
+    public String editGame(@PathVariable Long id, Model model) {
+        gameService.findById(id).ifPresent(game -> model.addAttribute("game", game));
+        return "forms/formGames";
+    }
+
     @GetMapping("/deleteGame/{id}")
-    public String deleteGame(@PathVariable Long id){
+    public String deleteGame(@PathVariable Long id) {
         gameService.deleteById(id);
         return "redirect:/games";
     }
 
-    //Update
-    @GetMapping("/editGame/{id}")
-    public String updateGame(Model model, @PathVariable Long id){
-        gameService.findById(id).ifPresent(game->{
-            model.addAttribute("game", game);
-        });
-        return "forms/formGames";
-    }
-
-    //Métodos para competiciones
-
-    //Show form
+    // ── Leagues ────────────────────────────────────────────
     @GetMapping("/newLeague")
     public String showLeagueForm(Model model) {
         model.addAttribute("league", new League());
         model.addAttribute("games", gameService.findAll());
-        return "redirect:forms/formCompetition";
+        return "forms/formCompetition";
     }
 
-    //Create
     @PostMapping("/saveLeague")
     public String saveLeague(@ModelAttribute League league) {
         leagueService.createLeague(league);
-        return "lists/listCompetition";
+        return "redirect:/admin";
     }
 
-    //Update
-    @GetMapping("/updateLeague/{id}")
-    public String updateLeague(Model model, @PathVariable Integer id) {
-        Optional<League> leagues = leagueService.findById(id);
-        if (leagues.isPresent()) {
-            model.addAttribute("league", leagues.get());
-            model.addAttribute("games", gameService.findAll());
-            return "forms/formCompetition";
-        }else{
-            return "lists/listCompetition";
-        }
+    @GetMapping("/editLeague/{id}")
+    public String editLeague(@PathVariable Long id, Model model) {
+        leagueService.findById(id).ifPresent(league -> model.addAttribute("league", league));
+        model.addAttribute("games", gameService.findAll());
+        return "forms/formCompetition";
     }
 
-    //Delete
     @GetMapping("/deleteLeague/{id}")
-    public String deleteLeague(@PathVariable Integer id) {
+    public String deleteLeague(@PathVariable Long id) {
         leagueService.delete(id);
-        return "redirect:lists/listCompetition";
+        return "redirect:/admin";
     }
 
-    //Métodos para equipos
-
-    //Show form
+    // ── Teams ──────────────────────────────────────────────
     @GetMapping("/newTeam")
     public String showTeamForm(Model model) {
         model.addAttribute("team", new Team());
@@ -125,89 +125,76 @@ public class AdminController {
     @PostMapping("/saveTeam")
     public String saveTeam(@ModelAttribute Team team) {
         teamService.save(team);
-        return "redirect:/teams";
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/editTeam/{id}")
+    public String editTeam(@PathVariable Long id, Model model) {
+        teamService.findById(id).ifPresent(team -> model.addAttribute("team", team));
+        model.addAttribute("games", gameService.findAll());
+        model.addAttribute("leagues", leagueService.findAll());
+        return "forms/formTeams";
     }
 
     @GetMapping("/deleteTeam/{id}")
     public String deleteTeam(@PathVariable Long id) {
         teamService.deleteById(id);
-        return "redirect:/teams";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/updateTeam/{id}")
-    public String updateTeam(@PathVariable Long id, Model model) {
-        teamService.findById(id).ifPresent(team -> {
-            model.addAttribute("team", team);
-        });
-        return "forms/formTeams";
-    }
-
-    //Métodos para jugadores
-
-    //Show form
+    // ── Players ────────────────────────────────────────────
     @GetMapping("/newPlayer")
     public String showPlayerForm(Model model) {
         model.addAttribute("player", new Player());
         model.addAttribute("teams", teamService.findAll());
         model.addAttribute("positions", positionService.getAll());
-        model.addAttribute("game", gameService.findAll());
+        model.addAttribute("games", gameService.findAll());
         return "forms/formJugadores";
     }
 
-    //Create
     @PostMapping("/savePlayer")
-    public String newPlayer(@ModelAttribute Player player){
+    public String savePlayer(@ModelAttribute Player player) {
         playerService.createPlayer(player);
-        return "redirect:/players";
+        return "redirect:/admin";
     }
 
-    //Delete
+    @GetMapping("/editPlayer/{id}")
+    public String editPlayer(@PathVariable Long id, Model model) {
+        playerService.findById(id).ifPresent(player -> model.addAttribute("player", player));
+        model.addAttribute("teams", teamService.findAll());
+        model.addAttribute("positions", positionService.getAll());
+        model.addAttribute("games", gameService.findAll());
+        return "forms/formJugadores";
+    }
+
     @GetMapping("/deletePlayer/{id}")
-    public String deletePlayer(@PathVariable Long id){
+    public String deletePlayer(@PathVariable Long id) {
         playerService.deleteByid(id);
-        return "redirect:/players";
+        return "redirect:/admin";
     }
 
-    //Update
-    @GetMapping("/updatePlayer/{id}")
-    public String updatePlayer(@PathVariable Long id, Model model){
-        playerService.findById(id).ifPresent(player -> {
-            model.addAttribute("player", player);
-        });
-        return "formPlayer";
-    }
-
-    //Métodos para entrenador
-
-    //Show form
+    // ── Trainers ───────────────────────────────────────────
     @GetMapping("/newTrainer")
     public String showTrainerForm(Model model) {
         model.addAttribute("trainer", new Trainer());
         return "forms/formTrainer";
     }
 
-    //Create
     @PostMapping("/saveTrainer")
-    public String newTrainer(@ModelAttribute Trainer trainer){
+    public String saveTrainer(@ModelAttribute Trainer trainer) {
         trainerService.save(trainer);
-        return "redirect:/trainers";
+        return "redirect:/admin";
     }
 
-    //Delete
+    @GetMapping("/editTrainer/{id}")
+    public String editTrainer(@PathVariable Long id, Model model) {
+        trainerService.findTrainerById(id).ifPresent(trainer -> model.addAttribute("trainer", trainer));
+        return "forms/formTrainer";
+    }
+
     @GetMapping("/deleteTrainer/{id}")
-    public String deleteTrainer(@PathVariable Long id){
+    public String deleteTrainer(@PathVariable Long id) {
         trainerService.delete(id);
-        return "redirect:/trainers";
+        return "redirect:/admin";
     }
-
-    //Update
-    @GetMapping("/updateTrainer/{id}")
-    public String updateTrainer(Model model, @PathVariable Long id){
-        trainerService.findTrainerById(id).ifPresent(trainer ->{
-            model.addAttribute("trainer", trainer);
-        });
-        return "redirect:/trainers";
-    }
-
 }
-

@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class Team {
     @Column(columnDefinition = "TEXT")
     private String history;
 
-    @Column(name = "palmares", columnDefinition = "TEXT")
-    private String palmares;
+    @Column(name = "palmares")
+    @ElementCollection
+    private List<String> palmares = new ArrayList<>();
 
     @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
@@ -60,7 +62,7 @@ public class Team {
     public Team() {}
 
     public Team(String teamName, String country, LocalDate teamCreated, Integer trophies, String history,
-                String palmares, String imageUrl, List<Player> players, Game game, List<League> leagues, Trainer trainer) {
+                List<String> palmares, String imageUrl, List<Player> players, Game game, List<League> leagues, Trainer trainer) {
         this.teamName = teamName;
         this.country = country;
         this.teamCreated = teamCreated;
@@ -128,10 +130,10 @@ public class Team {
     public void setTrophies(int trophies) {
         this.trophies = trophies;
     }
-    public String getPalmares() {
+    public List<String> getPalmares() {
         return palmares;
     }
-    public void setPalmares(String palmares) {
+    public void setPalmares(List<String> palmares) {
         this.palmares = palmares;
     }
     public String getImageUrl() {

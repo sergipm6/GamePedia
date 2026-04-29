@@ -1,9 +1,6 @@
     package com.ProyectoSergi.Proyecto.controller;
 
-    import com.BackendSergi.domain.service.GameService;
-    import com.BackendSergi.domain.service.PlayerService;
-    import com.BackendSergi.domain.service.TeamService;
-    import com.BackendSergi.domain.service.TrainerService;
+    import com.BackendSergi.domain.service.*;
     import org.springframework.stereotype.Controller;
     import org.springframework.ui.Model;
     import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +21,12 @@
         private GameService gameService;
         private PlayerService playerService;
         private TrainerService trainerService;
+        private LeagueService  leagueService;
 
-        public MainController(TeamService teamService, GameService gameService, PlayerService playerService, TrainerService trainerService) {
+        public MainController(TeamService teamService, GameService gameService,LeagueService leagueService, PlayerService playerService, TrainerService trainerService) {
             this.teamService = teamService;
             this.gameService = gameService;
+            this.leagueService = leagueService;
             this.playerService = playerService;
             this.trainerService = trainerService;
 
@@ -40,6 +39,7 @@
             model.addAttribute("totalPlayers", playerService.findAll().size());
             model.addAttribute("totalGame", gameService.findAll().size());
             model.addAttribute("totalTrainers", trainerService.findAllTrainers().size());
+            model.addAttribute("totalLeagues", leagueService.findAll().size());
             return "index";
         }
 
@@ -70,6 +70,14 @@
                 map.put("name", team.getTeamName());
                 map.put("type", "Equipo");
                 map.put("url", "/teams/" + team.getTeamId());
+                results.add(map);
+            });
+
+            leagueService.findLeagueNameContainingIgnoreCase(lowerQuery).forEach(league -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("name", league.getLeagueName());
+                map.put("type", "League");
+                map.put("url", "/leagues/" + league.getLeagueId());
                 results.add(map);
             });
 

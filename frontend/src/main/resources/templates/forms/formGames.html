@@ -74,6 +74,25 @@
                        placeholder="Ej: 180M jugadores registrados">
               </div>
 
+              <!-- Posiciones del juego -->
+              <div class="col-12">
+                <label class="form-label">Posiciones / Roles</label>
+                <div class="input-group mb-2">
+                  <input type="text" id="positionInput" class="form-control"
+                         placeholder="Ej: Top, Jungle, Mid, Support...">
+                  <button class="btn btn-outline-primary mt-3" type="button" onclick="addPosition()">
+                    Añadir
+                  </button>
+                </div>
+                <ul id="positionsList" class="list-group mb-3">
+                  <li th:each="pos : *{positions}"
+                      class="list-group-item d-flex justify-content-between align-items-center">
+                    <span th:text="${pos.positionName}"></span>
+                    <input type="hidden" name="positionNames" th:value="${pos.positionName}"> <!-- ✅ -->
+                    <button type="button" class="btn btn-sm btn-danger" onclick="removePosition(this)">×</button>
+                  </li>
+                </ul>
+
               <!-- URL imagen -->
               <div class="col-md-6">
                 <label class="form-label">URL de la Imagen / Banner</label>
@@ -131,8 +150,8 @@
               </button>
             </div>
 
-          </form>
         </div>
+          </form>
       </div>
 
     </div>
@@ -165,6 +184,28 @@
       input.name = `awards[${i}]`;
     });
   }
+
+function addPosition() {
+    const input = document.getElementById('positionInput');
+    const value = input.value.trim();
+    if (value === "") return;
+
+    const list = document.getElementById('positionsList');
+    const li = document.createElement('li');
+    li.className = "list-group-item d-flex justify-content-between align-items-center mt-1";
+    li.innerHTML = `
+        <span>${value}</span>
+        <input type="hidden" name="positionNames" value="${value}"> <!-- ✅ -->
+        <button type="button" class="btn btn-sm btn-danger" onclick="removePosition(this)">×</button>
+    `;
+    list.appendChild(li);
+    input.value = "";
+}
+
+function removePosition(btn) {
+    btn.parentElement.remove();
+}
+
 </script>
 
 <div th:replace="~{templateFragments/footer :: footer}"></div>

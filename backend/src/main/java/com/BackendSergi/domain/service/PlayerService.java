@@ -1,9 +1,12 @@
 package com.BackendSergi.domain.service;
 
 import com.BackendSergi.domain.entity.Player;
+import com.BackendSergi.domain.entity.Position;
 import com.BackendSergi.domain.entity.Team;
 import com.BackendSergi.domain.repository.LeagueRepository;
 import com.BackendSergi.domain.repository.PlayerRepository;
+import com.BackendSergi.domain.repository.PositionRepository;
+import com.BackendSergi.domain.repository.TeamRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,7 +1,9 @@
 package com.BackendSergi.domain.service;
 
 import com.BackendSergi.domain.entity.Game;
+import com.BackendSergi.domain.entity.Position;
 import com.BackendSergi.domain.repository.GameRepository;
+import com.BackendSergi.domain.repository.PositionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class GameService {
 
     private GameRepository gameRepository;
+    private PositionRepository positionRepository;
 
     public GameService(GameRepository gameRepository) {
         this.gameRepository = gameRepository;
@@ -47,7 +50,7 @@ public class GameService {
     }
 
     @Transactional
-    public Game save(Game game){
+    public Game save(Game game) {
         return gameRepository.save(game);
     }
 

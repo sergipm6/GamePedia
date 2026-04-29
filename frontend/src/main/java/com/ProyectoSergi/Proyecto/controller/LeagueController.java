@@ -38,5 +38,18 @@ public class LeagueController {
         return "lists/listCompetition";
     }
 
+    @GetMapping("/{id}")
+    public String leagueDetails(@PathVariable Long id, Model model) {
+        Optional<League> leagues = leagueService.findById(id);
+
+        if (leagues.isPresent()) {
+            model.addAttribute("league", leagues.get());
+            System.out.println(leagues);
+            return "cards/cardCompetition";
+        }
+
+        return "lists/listCompetition";
+    }
+
 
 }

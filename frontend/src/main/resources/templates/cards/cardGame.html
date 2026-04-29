@@ -116,56 +116,60 @@
 
                 </div>
             </div>
+            <!-- FIN row descripción + panel lateral -->
 
-            <!-- Ligas -->
-            <div class="mt-10 pt-4 border-top"
+            <!-- Ligas y Torneos -->
+            <div class="mt-5 pt-4 border-top"
                  th:if="${game.hasCompetitiveScene && !game.leagues.isEmpty()}">
                 <h3 class="section-title mb-4">
                     <i class="bi bi-trophy me-2"></i>Ligas y Torneos
                 </h3>
 
-            <div class="row row-cols-3 g-3">
-                <div th:each="league : ${game.leagues}">
-                    <a th:href="@{/leagues/{id}(id=${league.leagueId})}" style="text-decoration:none;">
-                        <div class="card team-card-hover text-center" style="position:relative; overflow:hidden;">
+                <div class="row row-cols-1 row-cols-md-3 g-3">
+                    <div class="col" th:each="league : ${game.leagues}">
+                        <a th:href="@{/leagues/{id}(id=${league.leagueId})}" style="text-decoration:none;">
+                            <div class="card team-card-hover text-center h-100" style="position:relative; overflow:hidden;">
 
-                            <!-- Badge -->
-                            <div style="position:absolute; top:0.75rem; right:0.75rem; z-index:1;">
-                    <span th:if="${league.international}" class="badge bg-warning">
-                        <i class="bi bi-globe2 me-1"></i>Internacional
-                    </span>
-                                <span th:unless="${league.international}" class="badge bg-dark">
-                        <i class="bi bi-geo-alt me-1"></i>Regional
-                    </span>
+                                <!-- Badge -->
+                                <div style="position:absolute; top:0.75rem; right:0.75rem; z-index:1;">
+                                    <span th:if="${league.international}" class="badge bg-warning">
+                                        <i class="bi bi-globe2 me-1"></i>Internacional
+                                    </span>
+                                    <span th:unless="${league.international}" class="badge bg-dark">
+                                        <i class="bi bi-geo-alt me-1"></i>Regional
+                                    </span>
+                                </div>
+
+                                <!-- Imagen o icono fallback -->
+                                <div style="height:120px; display:flex; align-items:center; justify-content:center;
+                                background:var(--bg-elevated); overflow:hidden;">
+                                    <img th:if="${league.imageUrl != null && !league.imageUrl.isEmpty()}"
+                                         th:src="${league.imageUrl}"
+                                         th:alt="${league.leagueName}"
+                                         style="width:100%; height:100%; object-fit:cover;">
+                                    <span th:unless="${league.imageUrl != null && !league.imageUrl.isEmpty()}"
+                                          style="font-size:3rem;"
+                                          th:text="${league.international} ? '🌍' : '📍'"></span>
+                                </div>
+
+                                <!-- Info -->
+                                <div class="card-body" style="padding:1rem;">
+                                    <h5 class="fw-bold text-uppercase mb-1"
+                                        style="color:var(--text-primary); font-size:0.85rem; letter-spacing:0.08em;"
+                                        th:text="${league.leagueName}">Liga</h5>
+                                    <p class="small text-muted mb-0"
+                                       style="overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;"
+                                       th:text="${league.leagueDescription}"></p>
+                                </div>
+
                             </div>
-
-                            <!-- Imagen o icono fallback -->
-                            <div style="height:120px; display:flex; align-items:center; justify-content:center;
-                            background:var(--bg-elevated); overflow:hidden;">
-                                <img th:if="${league.imageUrl != null && !league.imageUrl.isEmpty()}"
-                                     th:src="${league.imageUrl}"
-                                     th:alt="${league.leagueName}"
-                                     style="width:100%; height:100%; object-fit:cover;">
-                                <span th:unless="${league.imageUrl != null && !league.imageUrl.isEmpty()}"
-                                      style="font-size:3rem;"
-                                      th:text="${league.international} ? '🌍' : '📍'"></span>
-                            </div>
-
-                            <!-- Info -->
-                            <div class="card-body" style="padding:1rem;">
-                                <h5 class="fw-bold text-uppercase mb-1"
-                                    style="color:var(--text-primary); font-size:0.85rem; letter-spacing:0.08em;"
-                                    th:text="${league.leagueName}">Liga</h5>
-                                <p class="small text-muted mb-0"
-                                   style="overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;"
-                                   th:text="${league.leagueDescription}"></p>
-                            </div>
-
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <!-- Botones -->
+            <!-- FIN Ligas -->
+
+            <!-- Botones — siempre visibles -->
             <div class="mt-5 pt-4 border-top d-flex"
                  style="gap:0.75rem; justify-content:space-between; align-items:center;">
                 <a th:href="@{/games}" class="btn btn-outline-secondary">
@@ -179,6 +183,7 @@
             </div>
 
         </div>
+
     </div>
 </div>
 
