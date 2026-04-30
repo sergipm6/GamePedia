@@ -161,7 +161,7 @@ Para facilitar la evaluación del proyecto, he incluido un archivo llamado **`pr
 - Equipos y jugadores profesionales de ejemplo (incluyendo a T1).
 - Roles de usuario configurados.
 
-> **Nota:** Si usas Docker, el sistema ya inicializa la base de datos. Si lo haces de forma manual, puedes importar este archivo para ver el funcionamiento completo de la app desde el primer segundo.
+> **Nota:** Si usas Docker, el sistema ya inicializa la base de datos. Si lo haces de forma manual, puedes importar este archivo para ver el funcionamiento completo de la app desde el primer segundo. Puedes acceder como admin/admin o user/user.
 
 ---
 
