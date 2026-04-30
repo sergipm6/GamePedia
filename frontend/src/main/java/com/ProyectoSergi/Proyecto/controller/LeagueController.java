@@ -34,7 +34,7 @@ public class LeagueController {
 
         Map<Game, List<League>> leaguesByGame = leagues.stream()
                 .collect(Collectors.groupingBy(League::getGame, LinkedHashMap::new, Collectors.toList()));
-        model.addAttribute("leaguesByGame", leaguesByGame);
+        model.addAttribute("leagues", leaguesByGame);
         return "lists/listCompetition";
     }
 

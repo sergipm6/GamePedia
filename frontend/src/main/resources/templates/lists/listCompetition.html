@@ -1,92 +1,75 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Formulario de Liga | GamePedia</title>
+    <title>Competiciones | GamePedia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/styles.css}">
+    <style>
+        .card-league {
+            transition: transform 0.2s, shadow 0.2s;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+        .card-league:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+            color: inherit;
+        }
+        .img-container {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{templateFragments/navBar :: menuComun}"></div>
 
 <div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header">
-                    <i class="bi bi-trophy-fill me-2"></i>Configurar Liga
-                </div>
-                <div class="card-body p-4">
-                    <form th:action="@{/admin/saveLeague}" th:object="${league}" method="post">
+    <div th:each="entry : ${leagues}" class="mb-5">
 
-                        <input type="hidden" th:field="*{leagueId}">
+        <div class="d-flex align-items-center mb-4 border-bottom pb-2">
+            <h2 class="fw-bold mb-0 text-uppercase" th:text="${entry.key.gameName}">Nombre del Juego</h2>
+        </div>
 
-                        <div class="row g-3">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
 
-                            <!-- Nombre -->
-                            <div class="col-12">
-                                <label class="form-label">Nombre de la Liga</label>
-                                <input type="text" th:field="*{leagueName}" class="form-control"
-                                       placeholder="Ej: Worlds 2026, LEC, LVP..." required>
-                            </div>
+            <div th:each="league : ${entry.value}" class="col">
+                <div class="card h-100 shadow-sm card-league border-0">
 
-                            <!-- Juego -->
-                            <div class="col-12">
-                                <label class="form-label">Juego</label>
-                                <select th:field="*{game}" class="form-select" required>
-                                    <option value="">— Selecciona un juego —</option>
-                                    <option th:each="g : ${games}"
-                                            th:value="${g.gameId}"
-                                            th:text="${g.gameName}">
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- URL Imagen -->
-                            <div class="col-12">
-                                <label class="form-label">URL del Logo / Banner</label>
-                                <input type="url" th:field="*{imageUrl}" class="form-control"
-                                       placeholder="https://ejemplo.com/logo-liga.png">
-                                <!-- Preview -->
-                                <div th:if="${league.imageUrl != null && !league.imageUrl.isEmpty()}"
-                                     class="mt-2 text-center">
-                                    <img th:src="${league.imageUrl}" alt="Preview"
-                                         style="max-height:80px; object-fit:contain; border-radius:8px;">
-                                </div>
-                            </div>
-
-                            <!-- Internacional -->
-                            <div class="col-12 d-flex align-items-center" style="padding-top:0.5rem;">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                           th:field="*{international}" id="intCheck">
-                                    <label class="form-check-label" for="intCheck">
-                                        Torneo Internacional / Major
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Descripción -->
-                            <div class="col-12">
-                                <label class="form-label">Descripción</label>
-                                <textarea th:field="*{leagueDescription}" class="form-control" rows="4"
-                                          placeholder="Describe la liga, su formato, historia..."></textarea>
-                            </div>
-
+                    <a th:href="@{/leagues/{id}(id=${league.leagueId})}" class="text-decoration-none color-inherit">
+                        <div class="img-container rounded-top">
+                            <img th:if="${league.imageUrl}" th:src="${league.imageUrl}"
+                                 alt="Logo Liga" class="p-3" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <i th:unless="${league.imageUrl}" class="bi bi-trophy text-muted fs-1"></i>
                         </div>
 
-                        <div class="d-flex justify-content-end mt-4" style="gap:0.75rem;">
-                            <a th:href="@{/admin}" class="btn btn-outline-secondary rounded-pill px-4">
-                                Cancelar
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-bold mb-0" th:text="${league.leagueName}">Nombre Liga</h5>
+                                <span th:if="${league.international}" class="badge bg-primary">INT</span>
+                            </div>
+                            <p class="card-text text-muted small"
+                               th:text="${#strings.abbreviate(league.leagueDescription, 80)}">Descripción corta...</p>
+                        </div>
+                    </a>
+
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-3" sec:authorize="hasRole('ADMIN')">
+                        <hr class="mt-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">ID: <span th:text="${league.leagueId}"></span></small>
+                            <a th:href="@{/admin/editLeague/{id}(id=${league.leagueId})}"
+                               class="btn btn-sm btn-outline-secondary rounded-pill">
+                                <i class="bi bi-pencil-square"></i> Editar
                             </a>
-                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
-                                <i class="bi bi-floppy me-1"></i>Guardar Liga
-                            </button>
                         </div>
-
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

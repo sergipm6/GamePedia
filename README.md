@@ -153,16 +153,29 @@ Los datos de MySQL se persisten en el volumen `mysql_data`, por lo que no se pie
 | `ROLE_ADMIN` | Todo lo anterior + `/admin/**` |
 
 ---
+## 🗄️ Datos de prueba (Dataset)
 
+Para facilitar la evaluación del proyecto, he incluido un archivo llamado **`proyectodb.sql`** en la raíz del repositorio. Este archivo contiene una estructura de datos ya poblada con:
+- Videojuegos reales y descripciones.
+- Ligas (LCK, LEC, etc.) con sus logos.
+- Equipos y jugadores profesionales de ejemplo (incluyendo a T1).
+- Roles de usuario configurados.
+
+> **Nota:** Si usas Docker, el sistema ya inicializa la base de datos. Si lo haces de forma manual, puedes importar este archivo para ver el funcionamiento completo de la app desde el primer segundo.
+
+---
+
+## 👨‍💻 Autor
 ## 🗺️ Roadmap
 
 - [x] Catálogo de videojuegos
 - [x] Autenticación y autorización por roles
 - [x] Panel de administración
-- [ ] Listado de jugadores profesionales
-- [ ] Competiciones y ligas
+- [x] Listado de jugadores profesionales
+- [x] Competiciones y ligas
+- [x] Equipos y entrenadores (vista pública)
 - [ ] Sistema de opiniones / blog de usuarios
-- [ ] Equipos y entrenadores (vista pública)
+
 
 ---
 
