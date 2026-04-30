@@ -18,7 +18,7 @@ GamePedia es una aplicación web desarrollada con **Spring Boot** que permite co
 
 ### Usuario registrado (`ROLE_USER`)
 - Acceso al catálogo completo de juegos
-- *(Próximamente)* Consulta de jugadores profesionales y competiciones
+- Consulta de jugadores profesionales y competiciones
 - *(Próximamente)* Publicación de opiniones y reseñas en formato blog
 
 ### Administrador (`ROLE_ADMIN`)
