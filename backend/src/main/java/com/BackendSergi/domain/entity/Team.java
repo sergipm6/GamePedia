@@ -52,7 +52,7 @@ public class Team {
     )
     private List<League> leagues;
 
-    @OneToOne(mappedBy ="team")
+    @OneToOne(mappedBy = "team")
     private Trainer trainer;
 
     @ManyToOne

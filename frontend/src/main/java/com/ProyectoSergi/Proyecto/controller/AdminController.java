@@ -41,6 +41,7 @@ public class AdminController {
         model.addAttribute("leagues", leagueService.findAll());
         model.addAttribute("players", playerService.findAll());
         model.addAttribute("teams", teamService.findAll());
+        model.addAttribute("trainers", trainerService.findAllTrainers());
         return "private/dashboard";
     }
 

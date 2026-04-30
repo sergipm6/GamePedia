@@ -23,7 +23,7 @@ public class Trainer {
     @Column (name = "image_url")
     private String imageUrl;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private Team team;
 

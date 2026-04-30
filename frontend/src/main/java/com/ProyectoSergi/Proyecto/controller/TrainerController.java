@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("trainers")
 public class TrainerController {
 
     private TrainerService trainerService;
@@ -19,10 +19,17 @@ public class TrainerController {
     }
 
     //Read
-    @GetMapping("/trainers")
+    @GetMapping("")
     public String personal(Model model){
         model.addAttribute("trainers", trainerService.findAllTrainers());
         return "lists/listTrainers";
+    }
+
+    @GetMapping("/{id}")
+    public String showCard(@PathVariable Long id, Model model){
+        trainerService.findTrainerById(id).ifPresent(trainer ->
+                model.addAttribute("trainer", trainer));
+        return "cards/cardTrainer";
     }
 
 

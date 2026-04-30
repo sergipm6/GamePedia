@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista de Entrenadores | GamePedia</title>
+    <title>Entrenadores | GamePedia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
@@ -13,42 +14,100 @@
 
 <div class="container mt-5 mb-5">
 
-    <h1 class="mb-4">
-        <i class="bi bi-headset me-2 text-primary"></i>Lista de Entrenadores
-    </h1>
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="mb-1 fw-bold" style="color:var(--text-primary);">
+                <i class="bi bi-headset me-2" style="color:var(--accent-gold);"></i>Entrenadores
+            </h1>
+            <p class="mb-0" style="color:var(--text-muted); font-size:0.85rem;">
+                Staff técnico de los equipos
+            </p>
+        </div>
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/newTrainer}"
+           class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i>Nuevo Entrenador
+        </a>
+    </div>
 
     <div class="card shadow">
-        <div class="card-header">Staff Técnico</div>
         <div class="table-responsive">
-            <table class="table table-hover table-striped">
+            <table class="table table-hover mb-0">
                 <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Edad</th>
-                    <th>País</th>
-                    <th>Juego</th>
-                    <th>Equipo</th>
+                <tr style="border-bottom: 2px solid var(--accent-gold);">
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; padding:1rem 1.25rem;">Entrenador</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Edad</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">País</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Juego</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Equipo</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="trainer : ${trainers}">
-                    <td class="fw-bold" style="color:var(--text-primary);"
-                        th:text="${trainer.trainerName}">Nombre</td>
-                    <td th:text="${trainer.trainerAge}">Edad</td>
-                    <td th:text="${trainer.trainerCountry}">País</td>
-                    <td th:text="${trainer.game.gameName}">Juego</td>
-                    <td>
-              <span class="badge bg-primary"
-                    th:text="${trainer.team?.teamName} ?: 'Sin equipo'">
-              </span>
+                <tr th:each="trainer : ${trainers}"
+                    th:onclick="|window.location.href='@{/trainers/{id}(id=${trainer.trainerId})}'|"
+                    style="cursor:pointer; transition: background 0.15s;"
+                    class="player-row-hover">
+
+                    <!-- Nombre -->
+                    <td style="padding:0.9rem 1.25rem; vertical-align:middle;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:36px; height:36px; border-radius:50%; background:var(--bg-elevated);
+                                     border:2px solid var(--accent-gold); display:flex; align-items:center;
+                                     justify-content:center; flex-shrink:0;">
+                                <i class="bi bi-person-badge-fill" style="color:var(--accent-gold);"></i>
+                            </div>
+                            <span style="color:var(--text-primary); font-weight:600;"
+                                  th:text="${trainer.trainerName}">Nombre</span>
+                        </div>
                     </td>
+
+                    <!-- Edad -->
+                    <td style="vertical-align:middle; color:var(--text-secondary);"
+                        th:text="${trainer.trainerAge != null ? trainer.trainerAge + ' años' : '—'}">Edad</td>
+
+                    <!-- País -->
+                    <td style="vertical-align:middle; color:var(--text-secondary);"
+                        th:text="${trainer.trainerCountry != null ? trainer.trainerCountry : '—'}">País</td>
+
+                    <!-- Juego -->
+                    <td style="vertical-align:middle;">
+                            <span th:if="${trainer.team != null && trainer.team.game != null}"
+                                  style="color:var(--text-primary); font-size:0.85rem;"
+                                  th:text="${trainer.team.game.gameName}">Juego</span>
+                        <span th:unless="${trainer.team != null && trainer.team.game != null}"
+                              style="color:var(--text-muted);">—</span>
+                    </td>
+
+                    <!-- Equipo -->
+                    <td style="vertical-align:middle;">
+                            <span th:if="${trainer.team != null}"
+                                  class="badge"
+                                  style="background:rgba(255,193,7,0.15); color:var(--accent-gold);
+                                         border:1px solid var(--accent-gold); font-size:0.75rem;"
+                                  th:text="${trainer.team.teamName}">Equipo</span>
+                        <span th:unless="${trainer.team != null}"
+                              class="badge"
+                              style="background:rgba(255,255,255,0.06); color:var(--text-muted);
+                                         border:1px solid var(--border-color); font-size:0.75rem;">
+                                Sin equipo
+                            </span>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(trainers)}"
+             class="text-center py-5" style="color:var(--text-muted);">
+            <i class="bi bi-headset display-4 mb-3 d-block"></i>
+            <p class="mb-0">No hay entrenadores registrados todavía.</p>
+        </div>
+    </div>
 </div>
+
 <div th:replace="~{templateFragments/footer :: footer}"></div>
 </body>
 </html>

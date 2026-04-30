@@ -163,8 +163,8 @@
                 <tr th:each="league : ${leagues}">
                   <td th:text="${league.leagueName}">Liga</td>
                   <td>
-                      <span class="badge bg-dark"
-                            th:text="${league.game != null ? league.game.gameName : '—'}"></span>
+                    <span class="badge bg-dark"
+                          th:text="${league.game != null ? league.game.gameName : '—'}"></span>
                   </td>
                   <td>
                     <span th:if="${league.international}" class="badge bg-warning">Internacional</span>
@@ -260,6 +260,52 @@
                 </tr>
                 <tr th:if="${#lists.isEmpty(players)}">
                   <td colspan="2" class="text-center text-muted">No hay jugadores</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Entrenadores -->
+        <div class="col-md-6">
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <i class="bi bi-person-video2 me-2"></i>Entrenadores
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Equipo</th>
+                  <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="trainer : ${trainers}">
+                  <td style="color:var(--text-primary);" th:text="${trainer.trainerName}">Nombre</td>
+                  <td>
+                    <span th:if="${trainer.team != null}"
+                          class="badge bg-dark"
+                          th:text="${trainer.team.teamName}">Equipo</span>
+                    <span th:unless="${trainer.team != null}"
+                          class="badge bg-secondary">Sin equipo</span>
+                  </td>
+                  <td style="display:flex; gap:0.4rem;">
+                    <a th:href="@{/admin/editTrainer/{id}(id=${trainer.trainerId})}"
+                       class="btn btn-sm btn-outline-warning">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <a th:href="@{/admin/deleteTrainer/{id}(id=${trainer.trainerId})}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('¿Seguro?')">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(trainers)}">
+                  <td colspan="3" class="text-center text-muted">No hay entrenadores</td>
                 </tr>
                 </tbody>
               </table>

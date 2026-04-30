@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista de Jugadores | GamePedia</title>
+    <title>Jugadores | GamePedia</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/styles.css}">
 </head>
@@ -13,51 +13,118 @@
 
 <div class="container mt-5 mb-5">
 
-    <h1 class="mb-4">
-        <i class="bi bi-people-fill me-2 text-primary"></i>Lista de Jugadores
-    </h1>
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="mb-1 fw-bold" style="color:var(--text-primary);">
+                <i class="bi bi-people-fill me-2" style="color:var(--accent-cyan);"></i>Jugadores
+            </h1>
+            <p class="mb-0" style="color:var(--text-muted); font-size:0.85rem;">
+                Directorio de jugadores profesionales
+            </p>
+        </div>
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/newPlayer}"
+           class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg me-1"></i>Nuevo Jugador
+        </a>
+    </div>
 
     <div class="card shadow">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover mb-0">
                 <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Alias</th>
-                    <th>Email</th>
-                    <th>Juego</th>
-                    <th>Rol</th>
-                    <th>Equipo</th>
+                <tr style="border-bottom: 2px solid var(--accent-cyan);">
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600; padding:1rem 1.25rem;">Jugador</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Alias</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Contacto</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Juego</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Rol</th>
+                    <th style="color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:600;">Equipo</th>
                 </tr>
                 </thead>
                 <tbody>
-
                 <tr th:each="player : ${players}"
                     th:onclick="|window.location.href='@{/players/{id}(id=${player.playerId})}'|"
-                    style="cursor: pointer;"
+                    style="cursor:pointer; transition: background 0.15s;"
                     class="player-row-hover">
-                    <td style="color:var(--text-primary);" th:text="${player.playerName}">Nombre</td>
-                    <td>
-                        <span class="badge bg-primary" th:text="${player.username}">Alias</span>
+
+                    <!-- Nombre + avatar -->
+                    <td style="padding:0.9rem 1.25rem; vertical-align:middle;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:36px; height:36px; border-radius:50%; background:var(--bg-elevated);
+                                     border:2px solid var(--accent-cyan); display:flex; align-items:center;
+                                     justify-content:center; font-size:1rem; flex-shrink:0; overflow:hidden;">
+                                <img th:if="${player.imageUrl != null && !player.imageUrl.isEmpty()}"
+                                     th:src="${player.imageUrl}"
+                                     style="width:100%;height:100%;object-fit:cover;">
+                                <i th:unless="${player.imageUrl != null && !player.imageUrl.isEmpty()}"
+                                   class="bi bi-person-fill" style="color:var(--accent-cyan);"></i>
+                            </div>
+                            <span style="color:var(--text-primary); font-weight:600;"
+                                  th:text="${player.playerName}">Nombre</span>
+                        </div>
                     </td>
-                    <td th:text="${player.playerEmail}">Email</td>
-                    <td th:text="${player.game.gameName}">Juego</td>
-                    <td>
-                        <span class="badge bg-dark" th:text="${player.position.positionName}">Rol</span>
+
+                    <!-- Alias -->
+                    <td style="vertical-align:middle;">
+                            <span class="badge"
+                                  style="background:rgba(0,212,255,0.12); color:var(--accent-cyan);
+                                         border:1px solid var(--accent-cyan); font-size:0.8rem; font-weight:600;"
+                                  th:text="${player.username}">Alias</span>
                     </td>
-                    <td>
-              <span class="badge bg-success"
-                    th:text="${player.team != null ? player.team.teamName : 'Sin equipo'}">
-                Equipo
-              </span>
+
+                    <!-- Email -->
+                    <td style="vertical-align:middle; color:var(--text-secondary); font-size:0.85rem;"
+                        th:text="${player.playerEmail}">email</td>
+
+                    <!-- Juego -->
+                    <td style="vertical-align:middle;">
+                            <span th:if="${player.game != null}"
+                                  style="color:var(--text-primary); font-size:0.85rem;"
+                                  th:text="${player.game.gameName}">Juego</span>
+                        <span th:unless="${player.game != null}"
+                              style="color:var(--text-muted); font-size:0.85rem;">—</span>
                     </td>
+
+                    <!-- Rol -->
+                    <td style="vertical-align:middle;">
+                            <span th:if="${player.position != null}"
+                                  class="badge bg-dark"
+                                  style="border:1px solid var(--border-color); font-size:0.75rem;"
+                                  th:text="${player.position.positionName}">Rol</span>
+                        <span th:unless="${player.position != null}"
+                              style="color:var(--text-muted);">—</span>
+                    </td>
+
+                    <!-- Equipo -->
+                    <td style="vertical-align:middle;">
+                            <span th:if="${player.team != null}"
+                                  class="badge bg-success"
+                                  style="font-size:0.75rem;"
+                                  th:text="${player.team.teamName}">Equipo</span>
+                        <span th:unless="${player.team != null}"
+                              class="badge"
+                              style="background:rgba(255,255,255,0.06); color:var(--text-muted);
+                                         border:1px solid var(--border-color); font-size:0.75rem;">
+                                Agente Libre
+                            </span>
+                    </td>
+
                 </tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
+        <!-- Empty state -->
+        <div th:if="${#lists.isEmpty(players)}"
+             class="text-center py-5" style="color:var(--text-muted);">
+            <i class="bi bi-people display-4 mb-3 d-block"></i>
+            <p class="mb-0">No hay jugadores registrados todavía.</p>
+        </div>
+    </div>
 </div>
+
 <div th:replace="~{templateFragments/footer :: footer}"></div>
 </body>
 </html>
