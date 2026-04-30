@@ -143,6 +143,7 @@
         <div class="col-md-3">
             <h3 class="section-title">Cuerpo Técnico</h3>
             <div th:if="${team.trainer != null}">
+                <a th:href="@{/trainers/{id}(id=${team.trainer.trainerId})}" class="text-decoration-none">
                 <div class="card border-warning p-3 text-center shadow-sm h-100"
                      style="background: rgba(255, 193, 7, 0.05); border: 1px solid var(--accent-gold);">
 
@@ -169,6 +170,7 @@
                         <span th:text="${team.trainer.trainerCountry}">País</span>
                     </div>
                 </div>
+                </a>
             </div>
             <div th:unless="${team.trainer != null}"
                  class="card border-secondary border-dashed p-4 text-center opacity-50 h-100 d-flex align-items-center justify-content-center"
