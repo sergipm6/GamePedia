@@ -20,16 +20,25 @@ public class Trainer {
     @Column(name = "trainer_age")
     private Integer trainerAge;
 
+    @Column (name = "image_url")
+    private String imageUrl;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private Team team;
 
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
     public Trainer() {}
-    public Trainer( String trainerName, String trainerCountry, Integer trainerAge, Team team) {
+    public Trainer( String trainerName, String trainerCountry, Integer trainerAge, Team team, Game game,  String imageUrl) {
         this.trainerName = trainerName;
         this.trainerCountry = trainerCountry;
         this.trainerAge = trainerAge;
         this.team = team;
+        this.game = game;
+        this.imageUrl = imageUrl;
     }
 
     public Integer getTrainerId() {
@@ -61,5 +70,17 @@ public class Trainer {
     }
     public void setTeam(Team team) {
         this.team = team;
+    }
+    public Game getGame() {
+        return game;
+    }
+    public void setGame(Game game) {
+        this.game = game;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

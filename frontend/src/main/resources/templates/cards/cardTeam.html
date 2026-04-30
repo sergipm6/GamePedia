@@ -104,38 +104,80 @@
             </div>
         </div>
     </div>
-    <h3 class="section-title mt-4">Plantilla Actual</h3>
-    <div class="row g-3" th:if="${team.players != null and !team.players.isEmpty()}">
-        <div class="col-6 col-lg-4" th:each="player : ${team.players}">
-            <a th:href="@{/players/{id}(id=${player.playerId})}" class="text-decoration-none">
-                <div class="card bg-dark border-secondary p-3 h-100 text-center shadow-sm player-card-hover">
+    <div class="row mt-4">
+        <div class="col-md-9">
+            <h3 class="section-title">Plantilla Actual</h3>
+            <div class="row g-3" th:if="${team.players != null and !team.players.isEmpty()}">
+                <div class="col-6 col-lg-4" th:each="player : ${team.players}">
+                    <a th:href="@{/players/{id}(id=${player.playerId})}" class="text-decoration-none">
+                        <div class="card bg-dark border-secondary p-3 h-100 text-center shadow-sm player-card-hover">
+                            <div class="player-avatar mb-3">
+                                <img th:if="${player.imageUrl}" th:src="${player.imageUrl}"
+                                     class="rounded-circle border border-info shadow-sm"
+                                     width="80" height="80"
+                                     style="object-fit: cover; border-width: 2px !important;">
+                                <div th:unless="${player.imageUrl}"
+                                     class="rounded-circle border border-secondary d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 mx-auto"
+                                     style="width: 80px; height: 80px;">
+                                    <i class="bi bi-person-fill display-6 text-muted"></i>
+                                </div>
+                            </div>
+                            <h6 class="mb-1 text-light fw-bold" th:text="${player.username}">Nickname</h6>
+                            <div class="small text-muted mb-2" th:text="${player.playerName}" style="font-size: 0.75rem;">Nombre Real</div>
+                            <div class="mt-auto">
+                                <span class="badge rounded-pill bg-info bg-opacity-10 text-info border border-info border-opacity-25 w-100 py-2"
+                                      style="font-size: 0.7rem; letter-spacing: 1px;"
+                                      th:text="${player.position != null ? player.position.positionName : 'SIN ROL'}">
+                                    ROLE
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div th:unless="${team.players != null and !team.players.isEmpty()}" class="alert alert-dark border-secondary opacity-50">
+                No hay jugadores registrados.
+            </div>
+        </div>
 
-                    <div class="player-avatar mb-3">
-                        <img th:if="${player.imageUrl}" th:src="${player.imageUrl}"
-                             class="rounded-circle border border-info shadow-sm"
-                             width="80" height="80"
+        <div class="col-md-3">
+            <h3 class="section-title">Cuerpo Técnico</h3>
+            <div th:if="${team.trainer != null}">
+                <div class="card border-warning p-3 text-center shadow-sm h-100"
+                     style="background: rgba(255, 193, 7, 0.05); border: 1px solid var(--accent-gold);">
+
+                    <div class="mb-3">
+                        <img th:if="${team.trainer.imageUrl}" th:src="${team.trainer.imageUrl}"
+                             class="rounded-circle border border-warning shadow-sm"
+                             width="100" height="100"
                              style="object-fit: cover; border-width: 2px !important;">
-
-                        <div th:unless="${player.imageUrl}"
-                             class="rounded-circle border border-secondary d-flex align-items-center justify-content-center bg-secondary bg-opacity-25 mx-auto"
-                             style="width: 80px; height: 80px;">
-                            <i class="bi bi-person-fill display-6 text-muted"></i>
+                        <div th:unless="${team.trainer.imageUrl}"
+                             class="rounded-circle border border-warning d-flex align-items-center justify-content-center bg-dark mx-auto"
+                             style="width: 100px; height: 100px;">
+                            <i class="bi bi-person-badge display-6 text-warning"></i>
                         </div>
                     </div>
 
-                    <h6 class="mb-1 text-light fw-bold" th:text="${player.username}">Nickname</h6>
+                    <h5 class="text-warning fw-bold mb-1" th:text="${team.trainer.trainerName}">Nombre Trainer</h5>
 
-                    <div class="small text-muted mb-2" th:text="${player.playerName}" style="font-size: 0.75rem;">Nombre Real</div>
+                    <div class="badge bg-warning text-dark w-100 py-2" style="letter-spacing: 1px;">
+                        HEAD COACH
+                    </div>
 
-                    <div class="mt-auto">
-                    <span class="badge rounded-pill bg-info bg-opacity-10 text-info border border-info border-opacity-25 w-100 py-2"
-                          style="font-size: 0.7rem; letter-spacing: 1px;"
-                          th:text="${player.position != null ? player.position.positionName : 'SIN ROL'}">
-                        ROLE
-                    </span>
+                    <div class="mt-3 small text-muted">
+                        <i class="bi bi-geo-alt me-1"></i>
+                        <span th:text="${team.trainer.country}">País</span>
                     </div>
                 </div>
-            </a>
+            </div>
+            <div th:unless="${team.trainer != null}"
+                 class="card border-secondary border-dashed p-4 text-center opacity-50 h-100 d-flex align-items-center justify-content-center"
+                 style="background: transparent; border: 2px dashed #444;">
+                <div class="text-muted">
+                    <i class="bi bi-person-plus display-6 mb-2"></i>
+                    <p class="mb-0 small">Sin Entrenador<br>asignado</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

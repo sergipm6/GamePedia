@@ -177,6 +177,8 @@ public class AdminController {
     @GetMapping("/newTrainer")
     public String showTrainerForm(Model model) {
         model.addAttribute("trainer", new Trainer());
+        model.addAttribute("game",  gameService.findAll());
+        model.addAttribute("teams", teamService.findAll());
         return "forms/formTrainer";
     }
 

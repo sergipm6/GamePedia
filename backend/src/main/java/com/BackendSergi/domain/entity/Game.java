@@ -49,6 +49,9 @@ public class Game {
     @Column(name = "peak_players")
     private String peakPlayers;
 
+    @OneToMany(mappedBy = "game")
+    private List<Trainer> trainers;
+
 
     public Game() {}
 
@@ -60,7 +63,8 @@ public class Game {
     public Game(String gameName, String gameImageUrl, String gameDescription,
                 String gameGenre, String gameDeveloper, Integer releaseYear,
                 String peakPlayers, List<League> leagues,
-                List<String> awards, Boolean hasCompetitiveScene, List<Position> positions) {
+                List<String> awards, Boolean hasCompetitiveScene, List<Position> positions,
+                List<Trainer> trainers) {
         this.gameName = gameName;
         this.gameImageUrl = gameImageUrl;
         this.gameDescription = gameDescription;
@@ -72,6 +76,7 @@ public class Game {
         this.awards = awards;
         this.hasCompetitiveScene = hasCompetitiveScene;
         this.positions = positions;
+        this.trainers = trainers;
     }
 
 
@@ -173,5 +178,13 @@ public class Game {
     public void addPosition(Position position) {
         positions.add(position);
         position.setGame(this);
+    }
+
+    public List<Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public void setTrainers(List<Trainer> trainers) {
+        this.trainers = trainers;
     }
 }

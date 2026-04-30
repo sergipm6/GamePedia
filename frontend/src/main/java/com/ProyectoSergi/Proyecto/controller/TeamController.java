@@ -57,6 +57,7 @@ public class TeamController {
             model.addAttribute("team", team.get());
             model.addAttribute("game", team.get().getGame());
             model.addAttribute("leagues", team.get().getLeagues());
+            model.addAttribute("trainer",  team.get().getTrainer());
             return "cards/cardTeam";
         }
         return  "redirect:/";

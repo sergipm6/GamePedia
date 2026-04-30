@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Formulario de Entrenador | GamePedia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<div th:replace="~{templateFragments/navBar :: menuComun}"></div>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow">
+                <div class="card-header" style="background: linear-gradient(45deg, #1a1a1a, #2d2d2d); border-bottom: 2px solid var(--accent-gold);">
+                    <i class="bi bi-person-badge-fill me-2 text-warning"></i>Gestión de Entrenador (Head Coach)
+                </div>
+
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/saveTrainer}" th:object="${trainer}" method="post">
+
+                        <div class="row g-4">
+
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold">Nombre del Entrenador</label>
+                                <input type="text" th:field="*{trainerName}" class="form-control"
+                                       placeholder="Ej: Kim Jeong-gyun (kkOma)" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Edad</label>
+                                <input type="number" th:field="*{trainerAge}" class="form-control"
+                                       min="18" max="99" placeholder="35">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nacionalidad / País</label>
+                                <input type="text" th:field="*{trainerCountry}" class="form-control"
+                                       placeholder="Ej: Corea del Sur, Dinamarca...">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Juego</label>
+                                <select th:field="*{game}" class="form-select" id="gameSelect" onchange="filterTeamsByGame()">
+                                    <option value="">— Selecciona un juego —</option>
+                                    <option th:each="g : ${game}"
+                                            th:value="${g.gameId}"
+                                            th:text="${g.gameName}"></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Equipo que dirige</label>
+                                <select th:field="*{team}" class="form-select" id="teamSelect">
+                                    <option value="">— Selecciona primero un juego —</option>
+                                    <option th:each="t : ${teams}"
+                                            th:value="${t.teamId}"
+                                            th:text="${t.teamName}"
+                                            th:attr="data-game=${t.game != null ? t.game.gameId : ''}"> </option>
+                                </select>
+                                <div class="form-text text-muted small">
+                                    <i class="bi bi-info-circle me-1"></i>Solo aparecerán equipos del juego seleccionado.
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">URL de Foto de Perfil</label>
+                                <input type="url" name="imageUrl" class="form-control"
+                                       placeholder="https://ejemplo.com/coach.png">
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-5" style="gap:1rem;">
+                            <a th:href="@{/teams}" class="btn btn-outline-secondary rounded-pill px-4">
+                                Volver
+                            </a>
+                            <button type="submit" class="btn btn-warning rounded-pill px-5 fw-bold text-dark">
+                                <i class="bi bi-check-circle-fill me-2"></i>Guardar Entrenador
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 rounded border border-warning bg-warning bg-opacity-10">
+                <p class="mb-0 small text-light">
+                    <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+                    <strong>Nota:</strong> Al ser una relación <strong>OneToOne</strong>, asignar un entrenador a un equipo desvinculará automáticamente a cualquier entrenador previo de dicho equipo.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

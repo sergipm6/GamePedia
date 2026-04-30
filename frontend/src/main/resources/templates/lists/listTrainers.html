@@ -26,6 +26,7 @@
                     <th>Nombre</th>
                     <th>Edad</th>
                     <th>País</th>
+                    <th>Juego</th>
                     <th>Equipo</th>
                 </tr>
                 </thead>
@@ -35,6 +36,7 @@
                         th:text="${trainer.trainerName}">Nombre</td>
                     <td th:text="${trainer.trainerAge}">Edad</td>
                     <td th:text="${trainer.trainerCountry}">País</td>
+                    <td th:text="${trainer.game.gameName}">Juego</td>
                     <td>
               <span class="badge bg-primary"
                     th:text="${trainer.team?.teamName} ?: 'Sin equipo'">

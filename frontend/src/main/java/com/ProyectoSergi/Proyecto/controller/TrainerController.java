@@ -22,7 +22,7 @@ public class TrainerController {
     @GetMapping("/trainers")
     public String personal(Model model){
         model.addAttribute("trainers", trainerService.findAllTrainers());
-        return "trainers";
+        return "lists/listTrainers";
     }
 
 
