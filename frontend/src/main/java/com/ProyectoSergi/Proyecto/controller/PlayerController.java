@@ -1,6 +1,7 @@
 package com.ProyectoSergi.Proyecto.controller;
 
 import com.BackendSergi.domain.entity.Player;
+import com.BackendSergi.domain.service.CommentService;
 import com.BackendSergi.domain.service.PlayerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class PlayerController {
 
     private PlayerService playerService;
+    private CommentService commentService;
 
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, CommentService  commentService) {
         this.playerService = playerService;
+        this.commentService = commentService;
     }
 
     //Read
@@ -33,6 +36,7 @@ public class PlayerController {
 
         if(player.isPresent()){
             model.addAttribute("player", player.get());
+            model.addAttribute("comments", commentService.getComments("player", id));
             return "cards/cardPlayer";
         }
 

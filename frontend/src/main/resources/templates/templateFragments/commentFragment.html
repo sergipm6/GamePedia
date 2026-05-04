@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="commentSection(entityType, entityId, comments, redirectUrl)">
+
+    <div class="mt-5 pt-4 border-top">
+        <h3 class="section-title">
+            <i class="bi bi-chat-dots me-2"></i>Comentarios
+            <span style="color:var(--text-muted); font-size:0.8rem; font-weight:400;"
+                  th:text="'(' + ${comments != null ? #lists.size(comments) : 0} + ')'"></span>
+        </h3>
+
+        <!-- Formulario — solo autenticados -->
+        <div sec:authorize="isAuthenticated()" class="mb-4">
+            <form th:action="@{/comment/addComment}" method="post">
+                <input type="hidden" name="entityType" th:value="${entityType}"/>
+                <input type="hidden" name="entityId" th:value="${entityId}"/>
+                <input type="hidden" name="redirectUrl" th:value="${redirectUrl}"/>
+                <textarea name="content" class="form-control mb-2" rows="3"
+                          placeholder="Escribe un comentario..."></textarea>
+                <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="bi bi-send me-1"></i>Comentar
+                </button>
+            </form>
+        </div>
+
+        <!-- Aviso no autenticado -->
+        <p sec:authorize="isAnonymous()" class="mb-4"
+           style="color:var(--text-muted); font-size:0.9rem;">
+            <a th:href="@{/login}">Inicia sesión</a> para dejar un comentario.
+        </p>
+
+        <!-- Empty state -->
+        <div th:if="${comments == null or #lists.isEmpty(comments)}"
+             style="color:var(--text-muted); font-size:0.9rem; padding: 1rem 0;">
+            Todavía no hay comentarios. ¡Sé el primero!
+        </div>
+
+        <!-- Lista de comentarios — máximo 5 visibles, el resto ocultos -->
+        <div th:if="${comments != null and !#lists.isEmpty(comments)}">
+
+            <div th:each="comment, iterStat : ${comments}"
+                 th:classappend="${iterStat.index >= 5} ? ' comment-hidden' : ''"
+                 style="padding:1rem 0; border-bottom:1px solid var(--border-subtle);">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <i class="bi bi-person-circle" style="color:var(--accent-cyan);"></i>
+                    <span style="color:var(--text-primary); font-weight:600; font-size:0.85rem;"
+                          th:text="${comment.user.username}"></span>
+                    <span style="color:var(--text-muted); font-size:0.75rem;"
+                          th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+                <p style="color:var(--text-secondary); margin:0; font-size:0.9rem;"
+                   th:text="${comment.content}"></p>
+            </div>
+
+            <!-- Botón ver más — solo si hay más de 5 -->
+            <div th:if="${#lists.size(comments) > 5}" class="text-center mt-3">
+                <button id="btnVerMas" onclick="toggleComments()"
+                        class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-chevron-down me-1"></i>
+                    Ver todos los comentarios
+                    (<span th:text="${#lists.size(comments)}"></span>)
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <style>
+        .comment-hidden { display: none; }
+    </style>
+
+    <script>
+        function toggleComments() {
+            const hidden = document.querySelectorAll('.comment-hidden');
+            const btn = document.getElementById('btnVerMas');
+            const isHidden = hidden[0] && hidden[0].style.display === 'none' ||
+                             getComputedStyle(hidden[0]).display === 'none';
+
+            hidden.forEach(el => {
+                el.style.display = isHidden ? 'block' : 'none';
+            });
+
+            if (isHidden) {
+                btn.innerHTML = '<i class="bi bi-chevron-up me-1"></i> Mostrar menos';
+            } else {
+                btn.innerHTML = '<i class="bi bi-chevron-down me-1"></i> Ver todos los comentarios (' +
+                                hidden.length + ' más)';
+            }
+        }
+    </script>
+
+</div>
+
+</body>
+</html>

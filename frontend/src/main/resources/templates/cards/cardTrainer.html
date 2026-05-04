@@ -147,6 +147,12 @@
                     </div>
                 </div>
             </div>
+            <div th:replace="~{templateFragments/commentFragment :: commentSection(
+          'trainer',
+          ${trainer.trainerId},
+          ${comments},
+          '/trainer/' + ${trainer.trainerId}
+          )}"></div>
 
             <!-- Botones -->
             <div class="mt-5 pt-4 border-top d-flex"

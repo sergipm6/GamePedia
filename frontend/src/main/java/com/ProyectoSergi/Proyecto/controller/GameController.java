@@ -4,6 +4,7 @@ package com.ProyectoSergi.Proyecto.controller;
 import com.BackendSergi.domain.entity.Game;
 import com.BackendSergi.domain.entity.League;
 import com.BackendSergi.domain.entity.Team;
+import com.BackendSergi.domain.service.CommentService;
 import com.BackendSergi.domain.service.GameService;
 import com.BackendSergi.domain.service.LeagueService;
 import com.BackendSergi.domain.service.TeamService;
@@ -19,9 +20,12 @@ public class GameController {
 
     private GameService gameService;
     private LeagueService leagueService;
+    private CommentService commentService;
 
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, LeagueService leagueService, CommentService commentService) {
         this.gameService = gameService;
+        this.leagueService = leagueService;
+        this.commentService = commentService;
     }
 
     //Get
@@ -35,6 +39,7 @@ public class GameController {
         Optional<Game> game = gameService.findById(id);
         if(game.isPresent()){
             model.addAttribute("game", game.get());
+            model.addAttribute("comments", commentService.getComments("GAME", id));
             return "cards/cardGame";
         }
         return  "/lists/listGames";

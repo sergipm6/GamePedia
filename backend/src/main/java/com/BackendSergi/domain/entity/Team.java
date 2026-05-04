@@ -17,7 +17,7 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "team_id")
-    private int teamId;
+    private Long teamId;
 
     @Column(name = "team_name",  nullable = false)
     private String teamName;
@@ -76,10 +76,10 @@ public class Team {
 
     }
 
-    public int getTeamId() {
+    public Long getTeamId() {
         return teamId;
     }
-    public void setTeamId(int teamId) {
+    public void setTeamId(Long teamId) {
         this.teamId = teamId;
     }
     public String getTeamName() {

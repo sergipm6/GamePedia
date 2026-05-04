@@ -168,7 +168,13 @@
                 </div>
             </div>
             <!-- FIN Ligas -->
-
+            <!-- Comentarios -->
+            <div th:replace="~{templateFragments/commentFragment :: commentSection(
+          'GAME',
+          ${game.gameId},
+          ${comments},
+          '/game/' + ${game.gameId}
+      )}"></div>
             <!-- Botones — siempre visibles -->
             <div class="mt-5 pt-4 border-top d-flex"
                  style="gap:0.75rem; justify-content:space-between; align-items:center;">

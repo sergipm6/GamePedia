@@ -182,7 +182,13 @@
             </div>
         </div>
     </div>
-</div>
+    <div th:replace="~{templateFragments/commentFragment :: commentSection(
+      'TEAM',
+      ${team.teamId},
+      ${comments},
+      '/teams/' + ${team.teamId}
+      )}"></div>
+
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

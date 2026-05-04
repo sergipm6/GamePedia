@@ -3,6 +3,7 @@ package com.ProyectoSergi.Proyecto.controller;
 
 import com.BackendSergi.domain.entity.Game;
 import com.BackendSergi.domain.entity.League;
+import com.BackendSergi.domain.service.CommentService;
 import com.BackendSergi.domain.service.GameService;
 import com.BackendSergi.domain.service.LeagueService;
 import org.springframework.stereotype.Controller;
@@ -22,10 +23,12 @@ public class LeagueController {
 
     private LeagueService leagueService;
     private GameService gameService;
+    private CommentService commentService;
 
-    public LeagueController(LeagueService leagueService, GameService gameService) {
+    public LeagueController(LeagueService leagueService, GameService gameService, CommentService commentService) {
         this.leagueService = leagueService;
         this.gameService = gameService;
+        this.commentService = commentService;
     }
 
     @GetMapping("")
@@ -35,6 +38,7 @@ public class LeagueController {
         Map<Game, List<League>> leaguesByGame = leagues.stream()
                 .collect(Collectors.groupingBy(League::getGame, LinkedHashMap::new, Collectors.toList()));
         model.addAttribute("leagues", leaguesByGame);
+        model.addAttribute("comments", commentService.findAll());
         return "lists/listCompetition";
     }
 
@@ -44,6 +48,7 @@ public class LeagueController {
 
         if (leagues.isPresent()) {
             model.addAttribute("league", leagues.get());
+            model.addAttribute("comments", commentService.getComments("LEAGUE", id));
             System.out.println(leagues);
             return "cards/cardCompetition";
         }
